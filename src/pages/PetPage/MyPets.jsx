@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function PetPage() {
+export default function MyPets() {
   return (
     <div>
       

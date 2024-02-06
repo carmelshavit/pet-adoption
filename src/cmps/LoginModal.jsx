@@ -1,76 +1,59 @@
-import {
-    ModalContent,
-    ModalActions,
-    Button,
-    Header,
-    Icon,
-    Modal,
-    FormField,
-    Form
-} from 'semantic-ui-react'
-import React, { useState, useContext } from 'react'
-import UsersContext from '../context/UsersContext';
+import React, { useState, useContext } from "react";
+import { Modal, Button, Header, Icon, Form } from "semantic-ui-react";
+import LoginContext from "../context/LoginContext";
+import { petService } from "../service/pet.service";
 
-export default function LoginModal({ setIsOpenLoginModal }) {
-    const [users, setUsers] = useContext(UsersContext);
-    const [loggedInUser, setLoggedInUser] = useContext(LoginContext);
+export default function LoginModal({ setIsOpenLoginModal, isOpenLoginModal }) {
+  const { loggedInUser, setLoggedInUser } = useContext(LoginContext);
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
 
-    const [password, setPassword] = useState('')
-    const [email, setEmail] = useState('');
+  const login = async () => {
+    const authenticatedUser = await petService.login(email, password);
+    // const token= petService.saveToStorage()
+    setIsOpenLoginModal(false);
+    setLoggedInUser(authenticatedUser);
+    // petService.saveToStorage("loggedInUser", authenticatedUser);
+  };
 
-    const login = () => {
-        const user = users.find((user) => user.email === email)
-       
-        if (user.password === password) {
-            setLoggedInUser(user)
-            setIsOpenLoginModal(false)
-        }else{
-            alert('wrong password')
-        }
-        // const loginUser = {
-        //     id: petService.makeId(),
-        //     password,
-        //     email
-        // }
-        // petService.saveToStorage('users', users)
-    }
-
-    return (
-        <div>
-            <Modal
-                closeIcon
-                open={open}
-                onClose={() => setIsOpenLoginModal(false)}
-                onOpen={() => setIsOpenLoginModal(true)}
-            >
-                <Header />
-                <ModalContent>
-                    <Form>
-                        <FormField>
-                            <label>Email</label>
-                            <input placeholder='Email'
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                            />
-                        </FormField>
-                        <FormField>
-                            <label>Password</label>
-                            <input placeholder='Password' value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                            />
-                        </FormField>
-
-                        {/* <Button type='submit'>Submit</Button> */}
-                    </Form>
-
-                    {/* make sure to make a condition that password equal to the second password */}
-                </ModalContent>
-                <ModalActions>
-                    <Button color='green' onClick={login}>
-                        <Icon name='checkmark' /> Login
-                    </Button>
-                </ModalActions>
-            </Modal>
-        </div>
-    )
+  return (
+    <div>
+      {!loggedInUser && (
+        <Modal
+          closeIcon
+          open={isOpenLoginModal} // It seems like you forgot to define 'open' state
+          onClose={() => setIsOpenLoginModal(false)}
+          onOpen={() => setIsOpenLoginModal(true)}
+        >
+          <Header>Login</Header>
+          <Modal.Content>
+            <Form>
+              <Form.Field>
+                <label>Email</label>
+                <input
+                  placeholder="Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </Form.Field>
+              <Form.Field>
+                <label>Password</label>
+                <input
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  type="password"
+                />
+              </Form.Field>
+            </Form>
+          </Modal.Content>
+          <Modal.Actions>
+            <Button color="green" onClick={login}>
+              <Icon name="checkmark" /> Login
+            </Button>
+          </Modal.Actions>
+        </Modal>
+      )}
+    </div>
+  );
 }
