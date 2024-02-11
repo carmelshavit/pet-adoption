@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Modal, Button, Header, Icon, Form } from "semantic-ui-react";
 import LoginContext from "../context/LoginContext";
 import { petService } from "../service/pet.service";
@@ -10,18 +10,24 @@ export default function LoginModal({ setIsOpenLoginModal, isOpenLoginModal }) {
 
   const login = async () => {
     const authenticatedUser = await petService.login(email, password);
-    // const token= petService.saveToStorage()
     setIsOpenLoginModal(false);
+    // const loadUser = petService.loadUserFromStorage();
     setLoggedInUser(authenticatedUser);
-    // petService.saveToStorage("loggedInUser", authenticatedUser);
+  };
+
+  const logout = () => {
+    setLoggedInUser(false);
+    navigate("/");
+    localStorage.removeItem("user");
   };
 
   return (
     <div>
+      {loggedInUser && <button onClick={logout}>Logout</button>}
       {!loggedInUser && (
         <Modal
           closeIcon
-          open={isOpenLoginModal} // It seems like you forgot to define 'open' state
+          open={isOpenLoginModal}
           onClose={() => setIsOpenLoginModal(false)}
           onOpen={() => setIsOpenLoginModal(true)}
         >

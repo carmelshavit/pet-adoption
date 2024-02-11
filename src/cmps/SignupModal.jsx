@@ -19,21 +19,19 @@ export default function SignupModal({
 }) {
   const { setLoggedInUser } = useContext(LoginContext);
 
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [userDetails, setUserDetails] = useState({
+    first_name: "",
+    last_name: "",
+    phone_number: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
 
   const getNewUser = () => {
     const user = {
       id: petService.makeId(),
-      firstName,
-      lastName,
-      password,
-      email,
-      phoneNumber
+      ...userDetails,
     };
     return user;
   };
@@ -43,6 +41,7 @@ export default function SignupModal({
     if (password !== confirmPassword) return alert("passwords not identical");
     petService.signUp(user);
     setLoggedInUser(user);
+    logg
     setIsOpenSignupModal(false);
   };
 
@@ -60,16 +59,16 @@ export default function SignupModal({
             <FormField
               id="form-input-control-first-name"
               control={Input}
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-              label="First name"
+              value={userDetails.first_name}
+              onChange={(e) => setUserDetails(e.target.value)}
+              label="First_name"
               placeholder="First name"
             />
             <FormField
               id="form-input-control-last-name"
               control={Input}
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
+              value={userDetails.last_name}
+              onChange={(e) => setUserDetails(e.target.value)}
               label="Last name"
               placeholder="Last name"
             />
@@ -77,32 +76,32 @@ export default function SignupModal({
             <FormField
               id="form-input-control-Phone Number"
               control={Input}
-              value={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.target.value)}
+              value={userDetails.phone_number}
+              onChange={(e) => setUserDetails(e.target.value)}
               label="Phone Number"
               placeholder="Phone Number"
             />
             <FormField
               id="form-input-control-Password"
               control={Input}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={userDetails.password}
+              onChange={(e) => setUserDetails(e.target.value)}
               label="Password"
               placeholder="Password"
             />
             <FormField
               id="form-input-control-Password"
               control={Input}
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              value={userDetails.confirmPassword}
+              onChange={(e) => setUserDetails(e.target.value)}
               label="Retype Password"
               placeholder="Retype Password"
             />
             <FormField
               id="form-input-control-error-email"
               control={Input}
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={userDetails.email}
+              onChange={(e) => setUserDetails(e.target.value)}
               label="Email"
               placeholder="joe@schmoe.com"
               error={{

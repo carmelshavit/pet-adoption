@@ -15,15 +15,15 @@ export default function AdminPage() {
   const [pet, setPet] = useState({
     type: "",
     name: "",
-    adoptionStatus: "",
+    adoption_status: "",
     picture: "",
     height: "",
     weight: "",
     color: "",
     bio: "",
     hypoallergenic: false,
-    dietaryRestrictions: "",
-    breedOfAnimal: "",
+    dietary_restrictions: "",
+    breed: "",
   });
 
   const options = [
@@ -38,7 +38,7 @@ export default function AdminPage() {
   };
   const handleChangeSelect = (e, { value }) => {
     const selectedOption = options.find((o) => o.key === value);
-    setPet((prev) => ({...prev,type: selectedOption.text,}));
+    setPet((prev) => ({ ...prev, type: selectedOption.text }));
   };
 
   const addPet = async (e) => {
@@ -62,22 +62,22 @@ export default function AdminPage() {
                 label="Type"
                 options={options}
                 placeholder="Type"
-                value={pet.type.text}
+                value={pet.type}
                 name="type"
                 onChange={handleChangeSelect}
               />
               <Form.Input
                 label="Breed of Animal"
                 placeholder="Breed of Animal"
-                name="breedOfAnimal"
-                value={pet.breedOfAnimal}
+                name="breed"
+                value={pet.breed}
                 onChange={handleChange}
               />
               <Form.Input
-                label="Name"
-                placeholder="Name"
-                name="name"
-                value={pet.name}
+                label="name Pet"
+                placeholder="name Pet"
+                name="namePet"
+                value={pet.namePet}
                 onChange={handleChange}
               />
             </FormGroup>
@@ -145,16 +145,16 @@ export default function AdminPage() {
               <Form.Input
                 label="Dietary Restrictions"
                 placeholder="Dietary Restrictions"
-                value={pet.dietaryRestrictions}
+                value={pet.dietary_restrictions}
                 onChange={handleChange}
-                name="dietaryRestrictions"
+                name="dietary_restrictions"
               />
               <Form.Input
                 label="Adoption Status"
                 placeholder="Adoption Status"
-                value={pet.adoptionStatus}
+                value={pet.adoption_status}
                 onChange={handleChange}
-                name="adoptionStatus"
+                name="adoption_status"
               />
             </FormGroup>
             <Button type="submit" onClick={addPet}>
