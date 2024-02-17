@@ -10,20 +10,14 @@ export default function LoginModal({ setIsOpenLoginModal, isOpenLoginModal }) {
 
   const login = async () => {
     const authenticatedUser = await petService.login(email, password);
+    console.log(authenticatedUser);
+    setLoggedInUser(authenticatedUser);
     setIsOpenLoginModal(false);
     // const loadUser = petService.loadUserFromStorage();
-    setLoggedInUser(authenticatedUser);
-  };
-
-  const logout = () => {
-    setLoggedInUser(false);
-    navigate("/");
-    localStorage.removeItem("user");
   };
 
   return (
     <div>
-      {loggedInUser && <button onClick={logout}>Logout</button>}
       {!loggedInUser && (
         <Modal
           closeIcon

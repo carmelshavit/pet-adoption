@@ -10,42 +10,72 @@ import {
 } from "semantic-ui-react";
 
 import { petService } from "../../service/pet.service";
+import uploadImg from "../../service/cloudinary.utils";
 
 export default function AdminPage() {
+  const [selectedFile, setSelectedFile] = useState(null);
   const [pet, setPet] = useState({
-    type: "",
-    name: "",
-    adoption_status: "",
-    picture: "",
-    height: "",
-    weight: "",
-    color: "",
-    bio: "",
+    type: "fsf",
+    name: "fdf",
+    adoption_status: "fdf",
+    height: 1,
+    weight: 2,
+    color: "gg",
+    bio: "ugu",
     hypoallergenic: false,
-    dietary_restrictions: "",
-    breed: "",
+    dietary_restrictions: "jh",
+    breed: "ih",
+    imgFile: null,
   });
 
   const options = [
     { key: "dog", text: "dog", value: "dog" },
     { key: "cat", text: "cat", value: "cat" },
-    { key: ".org", text: ".org", value: ".org" },
   ];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setPet((prevPet) => ({ ...prevPet, [name]: value }));
   };
+  const handleChangeNumber = (e) => {
+    const { name, value } = e.target;
+    setPet((prevPet) => ({ ...prevPet, [name]: parseFloat(value) }));
+  };
+
   const handleChangeSelect = (e, { value }) => {
     const selectedOption = options.find((o) => o.key === value);
     setPet((prev) => ({ ...prev, type: selectedOption.text }));
   };
 
+  const handleChangeFile = async (ev) => {
+    console.log("handleChangeFile", ev);
+
+    setSelectedFile(ev.target.files[0]);
+  };
+
   const addPet = async (e) => {
+    e.preventDefault();
+
+    let imgUrl = null;
+    if (selectedFile) {
+      try {
+        const { url } = await uploadImg(selectedFile);
+        imgUrl = url;
+        console.log("line 48", url);
+      } catch (error) {
+        console.error("Error handling file upload:", error);
+      }
+    }
+
     try {
-      const newPet = await petService.addPet(pet);
+      console.log(pet);
+      const petWithImgUrl = {
+        ...pet,
+        imgFile: imgUrl,
+      };
+      setPet(petWithImgUrl);
+      const newPet = await petService.addPet(petWithImgUrl);
       console.log(newPet);
-      e.preventDefault();
     } catch (error) {
       console.error("Error adding pet:", error);
     }
@@ -56,8 +86,9 @@ export default function AdminPage() {
       <div style={{ marginTop: 20 }}>
         <Form>
           <Segment>
-            <FormGroup widths="equal">
-              <FormSelect
+            {/* Wrap form fields in a Form element */}
+            <Form.Group widths="equal">
+              <Form.Select
                 fluid
                 label="Type"
                 options={options}
@@ -74,27 +105,30 @@ export default function AdminPage() {
                 onChange={handleChange}
               />
               <Form.Input
-                label="name Pet"
-                placeholder="name Pet"
-                name="namePet"
-                value={pet.namePet}
+                label="Name"
+                placeholder="Name Pet"
+                name="name"
+                value={pet.name}
                 onChange={handleChange}
               />
-            </FormGroup>
-            <FormGroup widths="equal">
+            </Form.Group>
+            <Form.Group widths="equal">
               <Form.Input
                 type="file"
-                label="Picture"
-                placeholder="Picture"
-                name="picture"
-                value={pet.file}
-                onChange={handleChange}
+                htmlFor="img_url"
+                label="Image" // Corrected label
+                placeholder="Image"
+                name="imgUrl"
+                id="img_url" // Corrected ID
+                //value={pet.img_url}
+                onChange={handleChangeFile}
               />
+
               <Form.Input
                 label="Height"
                 placeholder="Height"
                 value={pet.height}
-                onChange={handleChange}
+                onChange={handleChangeNumber}
                 name="height"
                 type="number"
               />
@@ -102,7 +136,7 @@ export default function AdminPage() {
                 label="Weight"
                 placeholder="Weight"
                 value={pet.weight}
-                onChange={handleChange}
+                onChange={handleChangeNumber}
                 name="weight"
                 type="number"
               />
@@ -113,28 +147,27 @@ export default function AdminPage() {
                 onChange={handleChange}
                 name="color"
               />
-            </FormGroup>
+            </Form.Group>
           </Segment>
           <Segment>
-            <FormGroup inline>
+            <Form.Group inline>
               <label>Hypoallergenic</label>
-              <FormRadio
+              <Form.Radio
                 label="No"
                 value="No"
                 checked={!pet.hypoallergenic}
                 onChange={handleChange}
                 name="no"
               />
-              <FormRadio
+              <Form.Radio
                 label="Yes"
                 value="Yes"
                 checked={pet.hypoallergenic}
                 onChange={handleChange}
                 name="yes"
               />
-            </FormGroup>
-
-            <FormGroup widths="equal">
+            </Form.Group>
+            <Form.Group widths="equal">
               <Form.Input
                 label="Bio"
                 placeholder="Bio"
@@ -156,7 +189,8 @@ export default function AdminPage() {
                 onChange={handleChange}
                 name="adoption_status"
               />
-            </FormGroup>
+            </Form.Group>
+            {/* Ensure the 'Add Pet' button is inside the Form element */}
             <Button type="submit" onClick={addPet}>
               Submit
             </Button>

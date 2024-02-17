@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useNavigate } from "react";
 import React from "react";
 import { Link } from "react-router-dom";
 import {
@@ -17,20 +17,23 @@ export default function MainHeader() {
   const [isOpenSignupModal, setIsOpenSignupModal] = useState(false);
   const [isOpenLoginModal, setIsOpenLoginModal] = useState(false);
   const [activeItem, setActiveItem] = useState("home");
-  const { loggedInUser } = useContext(LoginContext);
+  const { loggedInUser, setLoggedInUser } = useContext(LoginContext);
+  //   const navigate = useNavigate();
 
   const handleItemClick = (e, { name }) => {
     setActiveItem(name);
   };
 
-
-  
-// 
+  const logout = () => {
+    setLoggedInUser(false);
+    // navigate("/");
+    localStorage.removeItem("userId");
+  };
 
   return (
     <div>
       <Menu pointing secondary size="large">
-        {loggedInUser?.isAdmin === true && (
+        {loggedInUser?.is_admin == true && (
           <MenuItem
             as={Link}
             to="/admin"
@@ -68,7 +71,14 @@ export default function MainHeader() {
           onClick={handleItemClick}
         />
         <MenuMenu position="right">
-          {loggedInUser && <div>Hello, {loggedInUser.name}</div>}
+          {loggedInUser && (
+            <div>
+              Hello, {loggedInUser.first_name} {loggedInUser.last_name}
+              <Button color="red" onClick={logout}>
+                Logout
+              </Button>
+            </div>
+          )}
           {!loggedInUser && (
             <div>
               <MenuItem>

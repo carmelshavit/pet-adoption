@@ -8,6 +8,8 @@ import LoginContext from "./context/LoginContext";
 import MainHeader from "./cmps/MainHeader";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import { petService } from "./service/pet.service";
+import "./assets/style/main.scss";
+import Gallery from "./Gallery";
 
 function App() {
   const [loggedInUser, setLoggedInUser] = useState(null);
@@ -16,7 +18,10 @@ function App() {
     const loadUser = async () => {
       const userId = petService.loadUserFromStorage();
       if (userId) {
-        const user = await petService.getUserById(userId);
+        const user = await petService.getCurrentLoggedInUser();
+
+        console.log(user);
+        // console.log("line 20", user);
         setLoggedInUser(user);
       }
     };
@@ -34,6 +39,7 @@ function App() {
             <Route path="/admin" element={<AdminPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/pets" element={<PetPage />} />
+            <Route path="/gallery" element={<Gallery />} />
           </Routes>
         </BrowserRouter>
       </LoginContext.Provider>
