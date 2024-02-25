@@ -1,14 +1,13 @@
 import React from "react";
 import PetPreview from "./PetPreview";
-import { petservice } from "../service/pet.service.js";
 
-export default function TweetList({ pets }) {
+export default function PetList({ pets, handlePetClick }) {
   return (
     <div>
       <ul className="pet-list">
         {pets.map((pet, index) => (
-          <li key={index}>
-            <PetPreview key={pet.id} />
+          <li key={index} onClick={() => handlePetClick(pet.id)}>
+            <PetPreview pet={pet} key={pet.id} />
           </li>
         ))}
       </ul>

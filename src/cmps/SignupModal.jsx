@@ -41,7 +41,7 @@ export default function SignupModal({
     if (password !== confirmPassword) return alert("passwords not identical");
     petService.signUp(user);
     setLoggedInUser(user);
-    logg
+  
     setIsOpenSignupModal(false);
   };
 

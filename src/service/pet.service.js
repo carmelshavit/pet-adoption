@@ -1,3 +1,5 @@
+import Cookies from "js-cookie";
+
 function makeId() {
   return Math.random().toString(36).substring(2, 10);
 }
@@ -37,11 +39,10 @@ async function login(email, password) {
     if (!response.ok) {
       throw new Error(`Failed to save user. Status: ${response.status}`);
     }
-
     const responseJson = await response.json();
     const user = responseJson.user;
-    console.log("front line 43", user);
     const token = responseJson.token;
+    Cookies.set("token", token);
     saveTokenAndUserToStorage(token, user.id);
     return user;
   } catch (error) {
@@ -59,14 +60,14 @@ async function getPets() {
       },
     });
 
-    console.log("line 94: Response status:", response.status);
+    // console.log("line 94: Response status:", response.status);
 
     if (!response.ok) {
       throw new Error(`Failed to get pet. Status: ${response.status}`);
     }
 
     const petData = await response.json(); // Renamed variable to avoid conflict
-    console.log("line 101: User data:", petData);
+    // console.log("line 101: User data:", petData);
     return petData;
   } catch (error) {
     console.error("Error getting pet:", error);
@@ -93,13 +94,92 @@ async function addPet(pet) {
       throw new Error(`Failed to save pet. Status: ${response.status}`);
     }
     const newPet = await response.json();
-    console.log("line 77: New pet added:", newPet);
+    // console.log("line 77: New pet added:", newPet);
     return newPet;
   } catch (error) {
     console.error("Error adding pet:", error);
     throw error;
   }
 }
+async function getPetById(petId) {
+  try {
+    console.log(petId);
+
+    const response = await fetch(`http://localhost:3001/pet/${petId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    console.log("line 112: Response status:", response.status);
+
+    if (!response.ok) {
+      throw new Error(`Failed to get pet. Status: ${response.status}`);
+    }
+
+    const petData = await response.json(); // Renamed variable to avoid conflict
+    console.log("line 118: pet data:", petData);
+    return petData;
+  } catch (error) {
+    console.error("Error getting pet:", error);
+    throw error;
+  }
+}
+async function editPet(editedPet) {
+  try {
+    console.log(editedPet.id);
+
+    const response = await fetch(`http://localhost:3001/pet/${editedPet.id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(editedPet),
+    });
+
+    console.log("line 138: Response status:", response.status);
+
+    if (!response.ok) {
+      throw new Error(`Failed to edit pet. Status: ${response.status}`);
+    }
+
+    const responseJson = await response.json();
+
+    return responseJson;
+  } catch (error) {
+    console.error("Error getting pet:", error);
+    throw error;
+  }
+}
+async function getPetsBySearch(filters) {
+  // console.log(filters);
+  try {
+    // Convert filters object to query parameters
+    const queryParams = new URLSearchParams(filters).toString();
+
+    const response = await fetch(`http://localhost:3001/pet?${queryParams}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    console.log("line 112: Response status:", response.status);
+
+    if (!response.ok) {
+      throw new Error(`Failed to get pets. Status: ${response.status}`);
+    }
+
+    const petsData = await response.json();
+    console.log("line 118: Pets data:", petsData);
+    return petsData;
+  } catch (error) {
+    console.error("Error getting pets:", error);
+    throw error;
+  }
+}
+
 async function getUserById(userId) {
   try {
     console.log(userId);
@@ -174,38 +254,23 @@ async function editUser(userId, editedUser) {
     throw error;
   }
 }
-function saveToStorage(key, value) {
-  localStorage.setItem(key, JSON.stringify(value));
-}
-function loadFromStorage(key) {
-  const data = localStorage.getItem(key);
-  return data ? JSON.parse(data) : undefined;
-}
 function saveTokenAndUserToStorage(token, userId) {
   localStorage.setItem("userToken", token);
   localStorage.setItem("userId", userId);
-      //add user instead userId and make sure dont have the password from backend. 
-
-}
-function loadTokenFromStorage() {
-  return localStorage.getItem("userToken");
-}
-function loadUserFromStorage() {
-  const data = localStorage.getItem("userId");
-  return data;
+  //add user instead userId and make sure dont have the password from backend.
 }
 
 export const petService = {
   login,
   makeId,
   signUp,
-  saveToStorage,
-  loadFromStorage,
   addPet,
-  saveTokenAndUserToStorage,
-  loadUserFromStorage,
   getUserById,
   editUser,
   getCurrentLoggedInUser,
+  saveTokenAndUserToStorage,
   getPets,
+  getPetById,
+  editPet,
+  getPetsBySearch,
 };

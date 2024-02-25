@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import { Modal, Button, Header, Icon, Form } from "semantic-ui-react";
 import LoginContext from "../context/LoginContext";
 import { petService } from "../service/pet.service";
+// import { localStorage } from "../service/localStorage";
 
 export default function LoginModal({ setIsOpenLoginModal, isOpenLoginModal }) {
   const { loggedInUser, setLoggedInUser } = useContext(LoginContext);
@@ -10,10 +11,9 @@ export default function LoginModal({ setIsOpenLoginModal, isOpenLoginModal }) {
 
   const login = async () => {
     const authenticatedUser = await petService.login(email, password);
-    console.log(authenticatedUser);
     setLoggedInUser(authenticatedUser);
     setIsOpenLoginModal(false);
-    // const loadUser = petService.loadUserFromStorage();
+    // localStorage.saveTokenAndUserToStorage(token, user.id);
   };
 
   return (

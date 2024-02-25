@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function PetIndex() {
+export default function AdminEditUser() {
   return (
     <div>
       

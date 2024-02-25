@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   ModalDescription,
   ModalContent,
@@ -8,22 +8,24 @@ import {
   Image,
   Modal,
 } from "semantic-ui-react";
-import BasicSearch from "./BasicSearch";
-import { useNavigate } from "react-router-dom";
 
 export default function ModalSearch({
-  isModalOpen,
   setIsModalOpen,
-  selectedImage,
+  isModalOpen,
   src,
+  filters,
+  setFilters,
 }) {
-  const navigate = useNavigate();
+  const [refresh, setRefresh] = useState(false);
+  // const [isModalOpen, setIsModalOpen] = useState(false); // Add modal state
 
-  //add this details in the search_modal-
-//   Pet details: Type (dog, cat)
-// Height, Weight, dietary
-// restrictions, breed of animal (Poodle, Siamese)
-
+  const changeFilters = (e) => {
+    const { name, value } = e.target;
+    setFilters((prevFilter) => ({ ...prevFilter, [name]: value }));
+  };
+  const handleRedirectToGallery = () => {
+    setIsModalOpen(false);
+  };
   return (
     <div>
       {isModalOpen && (
@@ -35,7 +37,7 @@ export default function ModalSearch({
         >
           <ModalContent>
             <div style={{ display: "flex" }}>
-              <Image size="small" src={src[selectedImage]} wrapped />
+              <Image size="small" src={src[filters.type]} wrapped />
               <div
                 style={{
                   display: "flex",
@@ -43,6 +45,37 @@ export default function ModalSearch({
                   justifyContent: "space-between",
                 }}
               >
+                <Form size="large">
+                  <Container>
+                    <Input
+                      style={{ marginTop: 20 }}
+                      placeholder="pet Breed"
+                      value={filters.breed}
+                      onChange={changeFilters}
+                    />
+                    <label>Hypoallergenic</label>
+                    <FormField>
+                      <Checkbox label="I have Hypoallergenic to pet" />
+                    </FormField>
+                    <FormGroup swidths="equal">
+                      <Input
+                        style={{ marginTop: 20 }}
+                        placeholder="bio"
+                        value={searchPet.bio}
+                        onChange={handleInputChange}
+                      />
+                      <Input
+                        style={{ marginTop: 20 }}
+                        placeholder="color"
+                        value={searchPet.color}
+                        onChange={handleInputChange}
+                      />
+                      <Button size="mini" style={{ marginTop: 20 }}>
+                        <Icon link name="search" />
+                      </Button>
+                    </FormGroup>
+                  </Container>
+                </Form>
                 <ModalDescription>
                   <Header>Default Profile Image</Header>
                   <p>Where would you like to search?</p>
@@ -50,14 +83,13 @@ export default function ModalSearch({
                 </ModalDescription>
               </div>
             </div>
-            <BasicSearch />
           </ModalContent>
           <ModalActions>
             <Button color="black" onClick={() => setIsModalOpen(false)}>
               Nope
             </Button>
             <Button
-              onClick={() => navigate("/gallery")}
+              onClick={handleRedirectToGallery}
               content="Yep, that's me"
               labelPosition="right"
               icon="checkmark"

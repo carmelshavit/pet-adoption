@@ -1,23 +1,23 @@
 import React, { useState } from "react";
 import ModalSearch from "./ModalSearch";
 import {
-  Search,
   CardGroup,
   Card,
   CardContent,
   CardDescription,
   Container,
-  Form,
-  FormGroup,
-  Input,
 } from "semantic-ui-react";
-import BasicSearch from "./BasicSearch";
 
-const SearchComponent = () => {
-  // const [searchQuery, setSearchQuery] = useState("");
-  // const [searchResults, setSearchResults] = useState([]);
+const SearchPage = () => {
+  const [filters, setFilters] = useState({
+    breed: ["poddele", "rtwiler"],
+    bio: "",
+    hypoallergenic: "yes",
+    color: "",
+    type: "",
+  });
+  const [refresh, setRefresh] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false); // Add modal state
-  const [selectedImage, setSelectedImage] = useState(null);
 
   const src = {
     dog: "../../../DogPortrait.jpg", // Replace with your actual image URLs
@@ -26,14 +26,23 @@ const SearchComponent = () => {
     cat: "../../../Cat.jpg",
   };
 
-  const handleCardClick = (imageKey) => {
-    setSelectedImage(imageKey);
+  const handleCardClick = (petType) => {
+    setFilters((prev) => ({
+      ...prev,
+      type: petType,
+    }));
+    console.log(filters.type);
     setIsModalOpen(true);
   };
+  // setFormState(prev => ({
+  //   ...prev,
+  //   [name]: {
+  //       ...prev[name],
+  //       error: error
+  //   }}))
   return (
     <Container>
       <div>
-        <BasicSearch />
         <CardGroup itemsPerRow={4}>
           <Card
             style={{ marginTop: 40 }}
@@ -90,7 +99,6 @@ const SearchComponent = () => {
         </CardGroup>
       </div>
       <ModalSearch
-        selectedImage={selectedImage}
         src={src}
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
@@ -99,4 +107,4 @@ const SearchComponent = () => {
   );
 };
 
-export default SearchComponent;
+export default SearchPage;
