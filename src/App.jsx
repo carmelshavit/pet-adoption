@@ -8,7 +8,7 @@ import LoginContext from "./context/LoginContext";
 import MainHeader from "./cmps/MainHeader";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import { petService } from "./service/pet.service";
-import { localStorage } from "./service/localStorage";
+import { localStorageService } from "./service/localStorage";
 import "./assets/style/main.scss";
 import Gallery from "./Gallery";
 import PetsContext from "./context/PetsContext";
@@ -19,12 +19,11 @@ function App() {
 
   useEffect(() => {
     const loadUser = async () => {
-      const userId = localStorage.loadUserFromStorage();
+      const userId = localStorageService.loadUserFromStorage();
+      console.log(userId);
       if (userId) {
         const user = await petService.getCurrentLoggedInUser();
-
         console.log(user);
-        // console.log("line 20", user);
         setLoggedInUser(user);
       }
     };

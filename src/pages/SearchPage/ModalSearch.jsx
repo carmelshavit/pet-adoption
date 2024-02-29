@@ -1,43 +1,57 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
-  ModalDescription,
+  Modal,
   ModalContent,
   ModalActions,
+  ModalDescription,
   Button,
   Header,
   Image,
-  Modal,
+  Form,
+  Container,
+  Input,
+  FormField,
+  Checkbox,
+  FormGroup,
+  Icon,
 } from "semantic-ui-react";
+import { ImagesSrc } from "../../../public/ImageSrc";
 
 export default function ModalSearch({
   setIsModalOpen,
   isModalOpen,
-  src,
-  filters,
-  setFilters,
+  selectedType,
 }) {
-  const [refresh, setRefresh] = useState(false);
-  // const [isModalOpen, setIsModalOpen] = useState(false); // Add modal state
+  const [filters, setFilters] = useState({
+    breed: "",
+    bio: "",
+    hypoallergenic: "yes",
+    color: "",
+    type: selectedType,
+  });
+  const navigate = useNavigate();
 
   const changeFilters = (e) => {
     const { name, value } = e.target;
     setFilters((prevFilter) => ({ ...prevFilter, [name]: value }));
   };
-  const handleRedirectToGallery = () => {
-    setIsModalOpen(false);
-  };
+
   return (
     <div>
       {isModalOpen && (
         <Modal
           closeIcon
-          open={isModalOpen} // Fix: Use the correct prop name 'isModalOpen'
+          open={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           onOpen={() => setIsModalOpen(true)}
         >
           <ModalContent>
+            <Modal.Header>
+              <Header>What would you like to search?</Header>
+            </Modal.Header>
             <div style={{ display: "flex" }}>
-              <Image size="small" src={src[filters.type]} wrapped />
+              <Image size="small" src={ImagesSrc[filters.type]} wrapped />
               <div
                 style={{
                   display: "flex",
@@ -47,40 +61,45 @@ export default function ModalSearch({
               >
                 <Form size="large">
                   <Container>
-                    <Input
-                      style={{ marginTop: 20 }}
-                      placeholder="pet Breed"
-                      value={filters.breed}
-                      onChange={changeFilters}
-                    />
-                    <label>Hypoallergenic</label>
                     <FormField>
-                      <Checkbox label="I have Hypoallergenic to pet" />
+                      <Input
+                        style={{ marginTop: 20 }}
+                        placeholder="Pet Breed"
+                        value={filters.breed}
+                        onChange={changeFilters}
+                      />
                     </FormField>
-                    <FormGroup swidths="equal">
-                      <Input
-                        style={{ marginTop: 20 }}
-                        placeholder="bio"
-                        value={searchPet.bio}
-                        onChange={handleInputChange}
-                      />
-                      <Input
-                        style={{ marginTop: 20 }}
-                        placeholder="color"
-                        value={searchPet.color}
-                        onChange={handleInputChange}
-                      />
-                      <Button size="mini" style={{ marginTop: 20 }}>
-                        <Icon link name="search" />
-                      </Button>
+                    <FormField>
+                      <Checkbox label="I am hypoallergenic to pets" />
+                    </FormField>
+                    <FormGroup widths="equal">
+                      <FormField>
+                        <Input
+                          style={{ marginTop: 20 }}
+                          placeholder="Bio"
+                          value={filters.bio}
+                          onChange={changeFilters}
+                        />
+                      </FormField>
+                      <FormField>
+                        <Input
+                          style={{ marginTop: 20 }}
+                          placeholder="Color"
+                          value={filters.color}
+                          onChange={changeFilters}
+                        />
+                      </FormField>
+                      <FormField>
+                        <Button size="mini" style={{ marginTop: 20 }}>
+                          <Icon link name="search" />
+                        </Button>
+                      </FormField>
                     </FormGroup>
                   </Container>
                 </Form>
-                <ModalDescription>
-                  <Header>Default Profile Image</Header>
-                  <p>Where would you like to search?</p>
-                  <p>Is it okay to use this photo?</p>
-                </ModalDescription>
+                {/* <ModalDescription>
+                  <Header>What would you like to search?</Header>
+                </ModalDescription> */}
               </div>
             </div>
           </ModalContent>
@@ -89,7 +108,7 @@ export default function ModalSearch({
               Nope
             </Button>
             <Button
-              onClick={handleRedirectToGallery}
+              onClick={() => navigate("/gallery")}
               content="Yep, that's me"
               labelPosition="right"
               icon="checkmark"

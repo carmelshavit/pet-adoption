@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Segment,
   Button,
@@ -8,7 +8,7 @@ import {
 } from "semantic-ui-react";
 
 import { petService } from "../../service/pet.service";
-import PetList from "../../PetList";
+import PetList from "../../cmps/PetList";
 import AdminEditPet from "./AdminEditPet";
 
 const MIN_PET_WEIGHT = 0.1;
@@ -18,8 +18,6 @@ const MAX_PET_HEIGHT = 5;
 
 export default function AdminPageContent() {
   const [isOpenEditModal, setIsOpenEditModal] = useState(false);
-  // const [selectedFile, setSelectedFile] = useState(null);
-  // const [editMode, setEditMode] = useState(false);
   const [pets, setPets] = useState();
   const [filterPet, setFilterPet] = useState({
     type: "",
@@ -49,17 +47,6 @@ export default function AdminPageContent() {
     console.log(pets);
   };
 
-  // useEffect(async () => {
-  //   try {
-  //     const fetchedPets = await petService.getPets();
-  //     if (fetchedPets) {
-  //       setPets(fetchedPets);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching pets:", error);
-  //   }
-  // }, []);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFilterPet((prevPet) => ({ ...prevPet, [name]: value }));
@@ -69,7 +56,6 @@ export default function AdminPageContent() {
     const fieldName = e.target.name;
     const value = parseFloat(e.target.value);
     if (minValue > maxValue) {
-      // console.log("Error: minValue is greater than maxValue");
       return;
     }
     if (value < minValue) {
@@ -161,6 +147,7 @@ export default function AdminPageContent() {
                 type="number"
               />
             </Form.Group>
+
             <Form.Group>
               <Form.Input
                 label="Color"

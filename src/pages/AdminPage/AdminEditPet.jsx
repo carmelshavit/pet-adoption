@@ -78,6 +78,7 @@ export default function AdminEditPet({
 
   return (
     <Container>
+      {/* {loggedInUser?.is_admin == true && ( */}
       <Modal
         closeIcon
         open={isOpenEditModal}
@@ -210,6 +211,7 @@ export default function AdminEditPet({
           </Form>
         </Modal.Content>
       </Modal>
+      {/* )} */}
     </Container>
   );
 }

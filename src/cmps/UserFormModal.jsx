@@ -13,9 +13,10 @@ import React, { useContext, useState } from "react";
 import { petService } from "../service/pet.service";
 import LoginContext from "../context/LoginContext";
 
-export default function SignupModal({
+export default function UserFormModal({
   setIsOpenSignupModal,
   isOpenSignupModal,
+  onFormSubmit,
 }) {
   const { setLoggedInUser } = useContext(LoginContext);
 
@@ -28,21 +29,9 @@ export default function SignupModal({
     confirmPassword: "",
   });
 
-  const getNewUser = () => {
-    const user = {
-      id: petService.makeId(),
-      ...userDetails,
-    };
-    return user;
-  };
-
-  const signup = () => {
-    const user = getNewUser();
-    if (password !== confirmPassword) return alert("passwords not identical");
-    petService.signUp(user);
-    setLoggedInUser(user);
-  
-    setIsOpenSignupModal(false);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setUserDetails((prevUser) => ({ ...prevUser, [name]: value }));
   };
 
   return (
@@ -57,51 +46,57 @@ export default function SignupModal({
         <ModalContent>
           <Form>
             <FormField
+              name="first_name"
               id="form-input-control-first-name"
               control={Input}
               value={userDetails.first_name}
-              onChange={(e) => setUserDetails(e.target.value)}
+              onChange={handleChange}
               label="First_name"
               placeholder="First name"
             />
             <FormField
+              name="last_name"
               id="form-input-control-last-name"
               control={Input}
               value={userDetails.last_name}
-              onChange={(e) => setUserDetails(e.target.value)}
+              onChange={handleChange}
               label="Last name"
               placeholder="Last name"
             />
 
             <FormField
+              name="phone_number"
               id="form-input-control-Phone Number"
               control={Input}
               value={userDetails.phone_number}
-              onChange={(e) => setUserDetails(e.target.value)}
+              onChange={handleChange}
               label="Phone Number"
               placeholder="Phone Number"
             />
             <FormField
+              name="password"
               id="form-input-control-Password"
               control={Input}
               value={userDetails.password}
-              onChange={(e) => setUserDetails(e.target.value)}
+              onChange={handleChange}
               label="Password"
               placeholder="Password"
             />
             <FormField
+              name="confirmPassword"
               id="form-input-control-Password"
               control={Input}
               value={userDetails.confirmPassword}
-              onChange={(e) => setUserDetails(e.target.value)}
+              onChange={handleChange}
               label="Retype Password"
               placeholder="Retype Password"
             />
             <FormField
+              name="email"
               id="form-input-control-error-email"
               control={Input}
               value={userDetails.email}
-              onChange={(e) => setUserDetails(e.target.value)}
+              onChange={handleChange}
               label="Email"
               placeholder="joe@schmoe.com"
               error={{
@@ -112,8 +107,9 @@ export default function SignupModal({
           </Form>
         </ModalContent>
         <ModalActions>
-          <Button color="green" onClick={() => signup()}>
-            <Icon name="checkmark" /> Save
+          <Button color="green" onClick={() => onFormSubmit(userDetails)}>
+            <Icon name="checkmark" />
+            submit
           </Button>
         </ModalActions>
       </Modal>

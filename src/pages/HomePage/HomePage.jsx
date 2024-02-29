@@ -14,7 +14,6 @@ export default function HomePage() {
     <Container>
       <div>
         <Card size="huge" style={{ marginTop: 20 }}>
-          {/* Added header prop for the CardContent */}
           <CardContent header="Need to find your pet a new home?" />
           <CardContent description={description} />
           <CardContent extra></CardContent>

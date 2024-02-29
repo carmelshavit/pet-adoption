@@ -16,17 +16,13 @@ export default function AdminSideBar({ isVisibile }) {
         width="thin"
       >
         <MenuItem as="a">
-          <Icon name="home" />
+          <Icon name="paw" />
           Pets
         </MenuItem>
         <MenuItem as="a">
-          <Icon name="gamepad" />
+          <Icon name="user outline" />
           Users
         </MenuItem>
-        {/* <MenuItem as="a">
-          <Icon name="camera" />
-          Channels
-        </MenuItem> */}
       </Sidebar>
       ;
     </div>

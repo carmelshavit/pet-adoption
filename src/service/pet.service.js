@@ -1,8 +1,10 @@
 import Cookies from "js-cookie";
+import { localStorageService } from "./localStorage";
 
 function makeId() {
   return Math.random().toString(36).substring(2, 10);
 }
+
 async function signUp(user) {
   try {
     const response = await fetch("http://localhost:3001/user/signup", {
@@ -14,7 +16,7 @@ async function signUp(user) {
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to save tweet. Status: ${response.status}`);
+      throw new Error(`Failed to save user. Status: ${response.status}`);
     }
 
     const newUser = await response.json();
@@ -41,6 +43,7 @@ async function login(email, password) {
     }
     const responseJson = await response.json();
     const user = responseJson.user;
+    console.log(user);
     const token = responseJson.token;
     Cookies.set("token", token);
     saveTokenAndUserToStorage(token, user.id);
@@ -128,7 +131,7 @@ async function getPetById(petId) {
 }
 async function editPet(editedPet) {
   try {
-    console.log(editedPet.id);
+    console.log(editedPet);
 
     const response = await fetch(`http://localhost:3001/pet/${editedPet.id}`, {
       method: "PUT",
@@ -207,7 +210,7 @@ async function getUserById(userId) {
 }
 async function getCurrentLoggedInUser() {
   try {
-    const token = loadTokenFromStorage();
+    const token = localStorageService.loadTokenFromStorage();
     const response = await fetch("http://localhost:3001/user/me", {
       method: "GET", // Assuming you are retrieving user data, so using GET method
       headers: {
@@ -228,27 +231,25 @@ async function getCurrentLoggedInUser() {
     throw error;
   }
 }
-async function editUser(userId, editedUser) {
+async function editUser(editedUser) {
   try {
-    console.log(userId);
-
-    const response = await fetch(`http://localhost:3001/user/${userId}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ editedUser }),
-    });
+    console.log("line 235", editedUser);
+    const response = await fetch(
+      `http://localhost:3001/user/${editedUser.id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(editedUser),
+      }
+    );
 
     console.log("line 94: Response status:", response.status);
 
     if (!response.ok) {
       throw new Error(`Failed to get user. Status: ${response.status}`);
     }
-
-    const responseJson = await response.json();
-
-    return responseJson;
   } catch (error) {
     console.error("Error getting user:", error);
     throw error;

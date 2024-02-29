@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { ImagesSrc } from "../../../public/ImageSrc";
 import ModalSearch from "./ModalSearch";
 import {
   CardGroup,
@@ -6,100 +7,96 @@ import {
   CardContent,
   CardDescription,
   Container,
+  Button,
+  Menu,
 } from "semantic-ui-react";
+import { petService } from "../../service/pet.service";
+import PetList from "../../cmps/PetList";
 
 const SearchPage = () => {
-  const [filters, setFilters] = useState({
-    breed: ["poddele", "rtwiler"],
-    bio: "",
-    hypoallergenic: "yes",
-    color: "",
-    type: "",
-  });
-  const [refresh, setRefresh] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false); // Add modal state
+  const [selectedType, setSelectedType] = useState("");
+  const [pets, setPets] = useState([]);
+  const [isPets, setIsPets] = useState(false);
 
-  const src = {
-    dog: "../../../DogPortrait.jpg", // Replace with your actual image URLs
-    sheltersRescues: "../../../OrganizationOutline.jpg",
-    otherAnimal: "../../../otherAnimal.png",
-    cat: "../../../Cat.jpg",
+  const handleCardClick = async (petType) => {
+    const pets = await petService.getPetsBySearch({ type: petType });
+    setPets(pets);
+    console.log(pets);
+    setSelectedType(petType);
+    setIsPets(true);
+    // setIsModalOpen(true);
   };
 
-  const handleCardClick = (petType) => {
-    setFilters((prev) => ({
-      ...prev,
-      type: petType,
-    }));
-    console.log(filters.type);
-    setIsModalOpen(true);
-  };
-  // setFormState(prev => ({
-  //   ...prev,
-  //   [name]: {
-  //       ...prev[name],
-  //       error: error
-  //   }}))
+  // const showMenu = () => {
+  //   setPets([]);
+  //   setIsPets(false);
+  // };
+
   return (
     <Container>
-      <div>
-        <CardGroup itemsPerRow={4}>
-          <Card
-            style={{ marginTop: 40 }}
-            onClick={() => handleCardClick("dog")}
-          >
-            <img
-              src={src.dog}
-              alt="Dog"
-              style={{ height: "200px", objectFit: "cover" }}
-            />
-            <CardContent>
-              <CardDescription>Dogs</CardDescription>
-            </CardContent>
-          </Card>
-          <Card
-            style={{ marginTop: 40 }}
-            onClick={() => handleCardClick("sheltersRescues")}
-          >
-            <img
-              src={src.sheltersRescues}
-              alt="Shelters & Rescues"
-              style={{ height: "200px", objectFit: "cover" }}
-            />
-            <CardContent>
-              <CardDescription>Shelters & Rescues</CardDescription>
-            </CardContent>
-          </Card>
-          <Card
-            style={{ marginTop: 40 }}
-            onClick={() => handleCardClick("Cat")}
-          >
-            <img
-              src={src.cat}
-              alt="Cat"
-              style={{ height: "200px", objectFit: "cover" }}
-            />
-            <CardContent>
-              <CardDescription>Cat</CardDescription>
-            </CardContent>
-          </Card>
-          <Card
-            style={{ marginTop: 40 }}
-            onClick={() => handleCardClick("otherAnimal")}
-          >
-            <img
-              src={src.otherAnimal}
-              alt="otherAnimal"
-              style={{ height: "200px", objectFit: "cover" }}
-            />
-            <CardContent>
-              <CardDescription>Other Animal</CardDescription>
-            </CardContent>
-          </Card>
-        </CardGroup>
-      </div>
+      {!isPets && (
+        <div>
+          <CardGroup itemsPerRow={4}>
+            <Card
+              style={{ marginTop: 40 }}
+              onClick={() => handleCardClick("dog")}
+            >
+              <img
+                src={ImagesSrc.dog}
+                alt="Dog"
+                style={{ height: "200px", objectFit: "cover" }}
+              />
+              <CardContent>
+                <CardDescription>Dogs</CardDescription>
+              </CardContent>
+            </Card>
+            <Card
+              style={{ marginTop: 40 }}
+              onClick={() => handleCardClick("sheltersRescues")}
+            >
+              <img
+                src={ImagesSrc.sheltersRescues}
+                alt="Shelters & Rescues"
+                style={{ height: "200px", objectFit: "cover" }}
+              />
+              <CardContent>
+                <CardDescription>Shelters & Rescues</CardDescription>
+              </CardContent>
+            </Card>
+            <Card
+              style={{ marginTop: 40 }}
+              onClick={() => handleCardClick("Cat")}
+            >
+              <img
+                src={ImagesSrc.cat}
+                alt="Cat"
+                style={{ height: "200px", objectFit: "cover" }}
+              />
+              <CardContent>
+                <CardDescription>Cat</CardDescription>
+              </CardContent>
+            </Card>
+            <Card
+              style={{ marginTop: 40 }}
+              onClick={() => handleCardClick("otherAnimal")}
+            >
+              <img
+                src={ImagesSrc.otherAnimal}
+                alt="otherAnimal"
+                style={{ height: "200px", objectFit: "cover" }}
+              />
+              <CardContent>
+                <CardDescription>Other Animal</CardDescription>
+              </CardContent>
+            </Card>
+          </CardGroup>
+        </div>
+      )}
+      {/* <Button onClick={showMenu}>back to menu</Button> */}
+      <PetList pets={pets} />
       <ModalSearch
-        src={src}
+        selectedType={selectedType}
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
       />

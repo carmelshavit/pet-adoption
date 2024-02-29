@@ -18,7 +18,7 @@ function loadUserFromStorage() {
   return data;
 }
 
-export const localStorage = {
+export const localStorageService = {
   saveToStorage,
   loadFromStorage,
   saveTokenAndUserToStorage,
