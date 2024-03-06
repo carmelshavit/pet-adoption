@@ -22,8 +22,6 @@ export default function MainHeader() {
   const { loggedInUser, setLoggedInUser } = useContext(LoginContext);
   const [editUserDetails, setEditUserDetails] = useState(null);
 
-  //   const navigate = useNavigate();
-
   const handleItemClick = (e, { name }) => {
     setActiveItem(name);
   };
@@ -61,15 +59,16 @@ export default function MainHeader() {
     setIsOpenSignupModal(false);
   };
 
+
   return (
     <div>
       <Menu pointing secondary size="large">
         {loggedInUser?.is_admin == true && (
           <MenuItem
             as={Link}
-            to="/admin"
-            name="admin"
-            active={activeItem === "admin"}
+            to="/users"
+            name="users"
+            active={activeItem === "users"}
             onClick={handleItemClick}
           />
         )}

@@ -79,8 +79,8 @@ async function getPets() {
 }
 async function addPet(pet) {
   try {
-    // console.log(pet);
-    const token = loadTokenFromStorage();
+    console.log(pet);
+    const token = localStorageService.loadTokenFromStorage();
 
     const response = await fetch("http://localhost:3001/pet", {
       method: "POST",
@@ -104,11 +104,11 @@ async function addPet(pet) {
     throw error;
   }
 }
-async function getPetById(petId) {
+async function getPetById(id) {
   try {
-    console.log(petId);
+    console.log(id);
 
-    const response = await fetch(`http://localhost:3001/pet/${petId}`, {
+    const response = await fetch(`http://localhost:3001/pet/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -159,7 +159,15 @@ async function getPetsBySearch(filters) {
   // console.log(filters);
   try {
     // Convert filters object to query parameters
-    const queryParams = new URLSearchParams(filters).toString();
+    //    TODO:FILTER ALL THE FIELDS WITH VALUE== NULL
+    const filteredFilters = {};
+    Object.keys(filters).forEach((key) => {
+      if (filters[key] !== null) {
+        filteredFilters[key] = filters[key];
+      }
+    });
+
+    const queryParams = new URLSearchParams(filteredFilters).toString();
 
     const response = await fetch(`http://localhost:3001/pet?${queryParams}`, {
       method: "GET",

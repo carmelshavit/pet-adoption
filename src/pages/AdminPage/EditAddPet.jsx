@@ -1,29 +1,38 @@
 import React, { useState } from "react";
 import { Segment, Container, Modal, Button, Form } from "semantic-ui-react";
+import { petService } from "../../service/pet.service";
+import uploadImg from "../../service/cloudinary.utils";
 
-export default function AdminEditPet({
-  pets,
+export default function EditAddPet({
   isOpenEditModal,
   setIsOpenEditModal,
+  selectedPet,
 }) {
-  const [pet, setPet] = useState({
-    type: "",
-    name: "",
-    adoption_status: "",
-    height: "",
-    weight: "",
-    color: "",
-    bio: "",
-    hypoallergenic: false,
-    dietary_restrictions: "",
-    breed: "",
-    imgFile: null,
-    id: "",
-  });
+  const [selectedFile, setSelectedFile] = useState(null);
+  // selectedPet is null => ADD mode.
+  // selectedPet is not null => EDIT mode.
+
+  const [pet, setPet] = useState(
+    selectedPet
+      ? selectedPet
+      : {
+          type: "",
+          name: "",
+          adoption_status: "",
+          height: "",
+          weight: "",
+          color: "",
+          bio: "",
+          hypoallergenic: false,
+          dietary_restrictions: "",
+          breed: "",
+          imgFile: "",
+        }
+  );
 
   const editPet = async (e) => {
     e.preventDefault();
-    const updatedPet = await petService.editPet(pets);
+    const updatedPet = await petService.editPet(selectedPet);
     console.log(pet);
     setPet(updatedPet);
   };
@@ -53,32 +62,37 @@ export default function AdminEditPet({
     setSelectedFile(ev.target.files[0]);
   };
 
-  const addPet = async (e) => {
-    e.preventDefault();
-    let imgUrl = null;
-    if (selectedFile) {
-      try {
-        const { url } = await uploadImg(selectedFile);
-        imgUrl = url;
-      } catch (error) {
-        console.error("Error handling file upload:", error);
-      }
-    }
+  const handleSubmit = async () => {
     try {
-      const petWithImgUrl = {
-        ...pet,
-        imgFile: imgUrl,
-      };
-      setPet(petWithImgUrl);
-      const newPet = await petService.addPet(petWithImgUrl);
+      if (selectedPet) {
+        await petService.editPet(selectedPet);
+      } else {
+        const addPet = async () => {
+          console.log(selectedFile);
+          if (selectedFile) {
+            try {
+              const { url } = await uploadImg(selectedFile);
+              const petWithImgUrl = {
+                ...pet,
+                imgFile: url,
+              };
+              await petService.addPet(petWithImgUrl);
+            } catch (error) {
+              console.error("Error handling file upload:", error);
+            }
+          }
+        };
+
+        // Invoke the addPet function
+        await addPet();
+      }
     } catch (error) {
-      console.error("Error adding pet:", error);
+      console.error(error);
     }
   };
 
   return (
     <Container>
-      {/* {loggedInUser?.is_admin == true && ( */}
       <Modal
         closeIcon
         open={isOpenEditModal}
@@ -116,12 +130,11 @@ export default function AdminEditPet({
               <Form.Group widths="equal">
                 <Form.Input
                   type="file"
-                  htmlFor="img_url"
-                  label="Image" // Corrected label
+                  htmlFor="imgFile"
+                  label="Image"
                   placeholder="Image"
-                  name="imgUrl"
-                  id="img_url" // Corrected ID
-                  //value={pet.img_url}
+                  name="imgFile"
+                  id="imgFile"
                   onChange={handleChangeFile}
                 />
                 <Form.Input
@@ -189,29 +202,15 @@ export default function AdminEditPet({
                   onChange={handleChange}
                   name="adoption_status"
                 />
-                {/* {editMode ? ( */}
-                <Form.Input
-                  label="Id"
-                  placeholder="pet Id"
-                  value={pet.id}
-                  onChange={handleChangeNumber}
-                  name="id"
-                  type="number"
-                />
-                {/* // ) : null} */}
               </Form.Group>
 
-              <Button type="submit" onClick={addPet}>
-                ADD
-              </Button>
-              <Button type="submit" onClick={editPet}>
-                EDIT
+              <Button type="submit" onClick={handleSubmit}>
+                {selectedPet ? "Save" : "Add"}
               </Button>
             </Segment>
           </Form>
         </Modal.Content>
       </Modal>
-      {/* )} */}
     </Container>
   );
 }

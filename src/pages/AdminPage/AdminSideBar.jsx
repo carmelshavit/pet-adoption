@@ -1,5 +1,5 @@
 import React from "react";
-import AdminPage from "./AdminPageContent";
+import AdminPage from "../../cmps/SearchPets";
 import { Menu, MenuItem, Icon, Sidebar } from "semantic-ui-react";
 
 export default function AdminSideBar({ isVisibile }) {

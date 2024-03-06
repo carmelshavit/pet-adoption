@@ -1,23 +1,15 @@
 import React, { useState } from "react";
-import {
-  Segment,
-  Button,
-  Form,
-  ButtonGroup,
-  Container,
-} from "semantic-ui-react";
+import { Segment, Button, Form, Container } from "semantic-ui-react";
 
-import { petService } from "../../service/pet.service";
-import PetList from "../../cmps/PetList";
-import AdminEditPet from "./AdminEditPet";
+import { petService } from "../service/pet.service";
+import PetList from "./PetList";
 
 const MIN_PET_WEIGHT = 0.1;
 const MAX_PET_WEIGHT = 10;
 const MIN_PET_HEIGHT = 0.1;
 const MAX_PET_HEIGHT = 5;
 
-export default function AdminPageContent() {
-  const [isOpenEditModal, setIsOpenEditModal] = useState(false);
+export default function SearchPets() {
   const [pets, setPets] = useState();
   const [filterPet, setFilterPet] = useState({
     type: "",
@@ -32,19 +24,11 @@ export default function AdminPageContent() {
     id: null,
   });
 
-  const handlePetClick = (petId) => {
-    console.log(`Pet with ID ${petId} clicked`);
-    const pet = pets.find((pet) => pet.id === petId);
-    console.log(pet);
-    setFilterPet();
-  };
-
   const searchPet = async (e) => {
     e.preventDefault();
     const petBySearch = await petService.getPetsBySearch(filterPet);
     console.log(petBySearch);
     setPets(petBySearch);
-    console.log(pets);
   };
 
   const handleChange = (e) => {
@@ -55,6 +39,7 @@ export default function AdminPageContent() {
   const handleChangeNumber = (e, minValue, maxValue) => {
     const fieldName = e.target.name;
     const value = parseFloat(e.target.value);
+
     if (minValue > maxValue) {
       return;
     }
@@ -183,25 +168,13 @@ export default function AdminPageContent() {
                 name="dietary_restrictions"
               />
             </Form.Group>
-            <ButtonGroup>
-              <Button onClick={() => setIsOpenEditModal(true)}>EDIT/ADD</Button>
-              {isOpenEditModal && (
-                <AdminEditPet
-                  isOpenEditModal={isOpenEditModal}
-                  setIsOpenEditModal={setIsOpenEditModal}
-                />
-              )}
-              <Button />
-            </ButtonGroup>
             <Button type="submit" onClick={searchPet}>
               SEARCH
             </Button>
           </Segment>
         </Form>
 
-        {pets !== undefined && (
-          <PetList handlePetClick={handlePetClick} pets={pets} />
-        )}
+        {/* {pets !== undefined && <PetList pets={pets} />} */}
       </Container>
     </div>
   );
