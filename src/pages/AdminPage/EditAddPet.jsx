@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Segment, Container, Modal, Button, Form } from "semantic-ui-react";
 import { petService } from "../../service/pet.service";
 import uploadImg from "../../service/cloudinary.utils";
@@ -11,7 +11,6 @@ export default function EditAddPet({
   const [selectedFile, setSelectedFile] = useState(null);
   // selectedPet is null => ADD mode.
   // selectedPet is not null => EDIT mode.
-
   const [pet, setPet] = useState(
     selectedPet
       ? selectedPet
@@ -30,12 +29,6 @@ export default function EditAddPet({
         }
   );
 
-  const editPet = async (e) => {
-    e.preventDefault();
-    const updatedPet = await petService.editPet(selectedPet);
-    console.log(pet);
-    setPet(updatedPet);
-  };
 
   const options = [
     { key: "dog", text: "dog", value: "dog" },
@@ -65,29 +58,27 @@ export default function EditAddPet({
   const handleSubmit = async () => {
     try {
       if (selectedPet) {
-        await petService.editPet(selectedPet);
+        await petService.editPet(pet);
       } else {
-        const addPet = async () => {
-          console.log(selectedFile);
-          if (selectedFile) {
-            try {
-              const { url } = await uploadImg(selectedFile);
-              const petWithImgUrl = {
-                ...pet,
-                imgFile: url,
-              };
-              await petService.addPet(petWithImgUrl);
-            } catch (error) {
-              console.error("Error handling file upload:", error);
-            }
-          }
-        };
-
-        // Invoke the addPet function
         await addPet();
       }
     } catch (error) {
       console.error(error);
+    }
+  };
+
+  const addPet = async () => {
+    if (selectedFile) {
+      try {
+        const { url } = await uploadImg(selectedFile);
+        const petWithImgUrl = {
+          ...pet,
+          imgFile: url,
+        };
+        await petService.addPet(petWithImgUrl);
+      } catch (error) {
+        console.error("Error handling file upload:", error);
+      }
     }
   };
 

@@ -14,6 +14,7 @@ import LoginModal from "./LoginModal";
 import LoginContext from "../context/LoginContext";
 import { petService } from "../service/pet.service";
 import { localStorageService } from "../service/localStorage";
+//TODO- side bar that keep logout and edit user.
 
 export default function MainHeader() {
   const [isOpenSignupModal, setIsOpenSignupModal] = useState(false);
@@ -58,7 +59,6 @@ export default function MainHeader() {
     setLoggedInUser(newUser);
     setIsOpenSignupModal(false);
   };
-
 
   return (
     <div>

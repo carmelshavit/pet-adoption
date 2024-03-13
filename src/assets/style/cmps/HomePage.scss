@@ -1,0 +1,45 @@
+
+body {
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    background: url("../../../../public/cat2.jpg");
+    background-size: cover;
+  }
+  
+  .full-screen-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .header {
+    margin: 40px 0;
+    color: #009688;
+    text-shadow: 2px 2px 4px #000000;
+  }
+  
+  .text {
+    text-align: center;
+    font-size: 1.2em;
+    margin: 10px 0;
+    color: #555;
+  }
+  
+  .button {
+    margin: 20px auto;
+    display: block;
+  }
+  
+  .login-text {
+    text-align: center;
+    display: block;
+    color: #555;
+  }
+  
+  .highlight {
+    color: #009688;
+  }
+  

@@ -79,7 +79,7 @@ async function getPets() {
 }
 async function addPet(pet) {
   try {
-    console.log(pet);
+    console.log("add pet", pet);
     const token = localStorageService.loadTokenFromStorage();
 
     const response = await fetch("http://localhost:3001/pet", {
@@ -101,6 +101,81 @@ async function addPet(pet) {
     return newPet;
   } catch (error) {
     console.error("Error adding pet:", error);
+    throw error;
+  }
+}
+// TODO- make combination between pet_status and user table with join. to get likesPet.
+
+//TODO- implement getPetLikes from pet_status table
+
+// async function getPetLikes() {
+//   try {
+//     const response = await fetch(`http://localhost:3001/pet/${petId}/save`, {
+//       method: "GET", // Assuming you are retrieving user data, so using GET method
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//     });
+
+//     console.log("line 118: Response status:", response.status);
+
+//     if (!response.ok) {
+//       throw new Error(`Failed to save like. Status: ${response.status}`);
+//     }
+//     const newLike = await response.json();
+//     return newLike;
+//   } catch (error) {
+//     console.error("Error adding like:", error);
+//     throw error;
+//   }
+// }
+async function addPetLike(userId, petId) {
+  try {
+    const response = await fetch(`http://localhost:3001/pet/${petId}/save`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        // authorization: "Bearer " + token,
+      },
+      body: JSON.stringify({ userId, petId }),
+    });
+
+    console.log("line 118: Response status:", response.status);
+
+    if (!response.ok) {
+      throw new Error(`Failed to save like. Status: ${response.status}`);
+    }
+    const newLike = await response.json();
+    return newLike;
+  } catch (error) {
+    console.error("Error adding like:", error);
+    throw error;
+  }
+}
+async function removePetLike(userId, petId) {
+  console.log(userId);
+  console.log(petId);
+  try {
+    const response = await fetch(
+      `http://localhost:3001/pet/${petId}/save?userId=${userId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          // authorization: "Bearer " + token,
+        },
+      }
+    );
+
+    console.log("line 169: Response status:", response.status);
+
+    if (!response.ok) {
+      throw new Error(`Failed to delete like. Status: ${response.status}`);
+    }
+    const newLike = await response.json();
+    return newLike;
+  } catch (error) {
+    console.error("Error adding like:", error);
     throw error;
   }
 }
@@ -156,7 +231,6 @@ async function editPet(editedPet) {
   }
 }
 async function getPetsBySearch(filters) {
-  // console.log(filters);
   try {
     // Convert filters object to query parameters
     //    TODO:FILTER ALL THE FIELDS WITH VALUE== NULL
@@ -168,7 +242,6 @@ async function getPetsBySearch(filters) {
     });
 
     const queryParams = new URLSearchParams(filteredFilters).toString();
-
     const response = await fetch(`http://localhost:3001/pet?${queryParams}`, {
       method: "GET",
       headers: {
@@ -176,14 +249,12 @@ async function getPetsBySearch(filters) {
       },
     });
 
-    console.log("line 112: Response status:", response.status);
+    // console.log("line 112: Response status:", response.status);
 
     if (!response.ok) {
       throw new Error(`Failed to get pets. Status: ${response.status}`);
     }
-
     const petsData = await response.json();
-    console.log("line 118: Pets data:", petsData);
     return petsData;
   } catch (error) {
     console.error("Error getting pets:", error);
@@ -193,8 +264,6 @@ async function getPetsBySearch(filters) {
 
 async function getUserById(userId) {
   try {
-    console.log(userId);
-
     const response = await fetch(`http://localhost:3001/user/${userId}`, {
       method: "GET", // Assuming you are retrieving user data, so using GET method
       headers: {
@@ -282,4 +351,7 @@ export const petService = {
   getPetById,
   editPet,
   getPetsBySearch,
+  addPetLike,
+  removePetLike,
+  // getPetLikes,
 };

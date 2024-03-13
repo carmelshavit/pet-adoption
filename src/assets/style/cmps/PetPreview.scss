@@ -1,0 +1,26 @@
+.pet-preview {
+  text-align: center;
+  padding: 10px;
+  position: relative;
+
+
+.pet-img {
+  border-radius: 8px;
+  margin-bottom: 8px;
+  width: 120px;
+  height: 140px; /* Fix the typo here */
+  object-fit: cover; /* Adjust as needed, e.g., cover, contain, etc. */
+
+}
+.name {
+  font-size: 16px;
+  color: black;
+}
+
+.like {
+  all: unset;
+  position: absolute;
+  top: 15px;
+  right: 15px;
+}
+}

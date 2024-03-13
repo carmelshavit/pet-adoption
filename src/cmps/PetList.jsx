@@ -1,23 +1,26 @@
-import React from "react";
+import React, { useContext } from "react";
 import PetPreview from "./PetPreview";
-import { useNavigate } from "react-router-dom";
+import LoginContext from "../context/LoginContext";
 
-export default function PetList({ pets, openEditModal, toggleLike }) {
-  const navigate = useNavigate();
+export default function PetList({ pets, openEditModal }) {
+  const { loggedInUser } = useContext(LoginContext);
 
-  
+  const isAdmin = loggedInUser?.is_admin == true;
+
+  const handlePetClick = (petId, e) => {
+    e.stopPropagation();
+    openEditModal(petId);
+  };
+
   return (
     <div>
       <ul className="pet-list">
         {pets.map((pet, index) => (
           <li key={index}>
             <PetPreview pet={pet} key={pet.id} />
-            <button onClick={() => navigate(`/pet/${pet.id}`)}>Open</button>
-            {openEditModal && (
-              <button onClick={() => openEditModal(pet.id)}>Edit</button>
-              
+            {isAdmin && (
+              <button onClick={(e) => handlePetClick(pet.id, e)}>Edit</button>
             )}
-            {/* <button onClick={toggleLike(pet.id)}>Like</button> */}
           </li>
         ))}
       </ul>

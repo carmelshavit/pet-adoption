@@ -11,12 +11,12 @@ import { petService } from "./service/pet.service";
 import { localStorageService } from "./service/localStorage";
 import "./assets/style/main.scss";
 import PetsContext from "./context/PetsContext";
-import LikedContext from "./context/LikedContext";
+import PetsLikedContext from "./context/PetsLikedContext";
 
 function App() {
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [pets, setPets] = useState(null);
-  const [likedPet, setLikedPet] = useState([]);
+  const [likedPetIds, setLikedPetIds] = useState([]);
 
   useEffect(() => {
     const loadUser = async () => {
@@ -25,6 +25,7 @@ function App() {
       if (userId) {
         const user = await petService.getCurrentLoggedInUser();
         // console.log(user);
+        // TODO- setlikedPetIds to petService.getPetLikes
         setLoggedInUser(user);
       }
     };
@@ -35,7 +36,7 @@ function App() {
     <div>
       <PetsContext.Provider value={{ pets, setPets }}>
         <LoginContext.Provider value={{ loggedInUser, setLoggedInUser }}>
-          <LikedContext.Provider value={{ likedPet, setLikedPet }}>
+          <PetsLikedContext.Provider value={{ likedPetIds, setLikedPetIds }}>
             <BrowserRouter>
               <MainHeader />
               <Routes>
@@ -46,7 +47,7 @@ function App() {
                 <Route path="/pet/:id" element={<PetPage />} />
               </Routes>
             </BrowserRouter>
-          </LikedContext.Provider>
+          </PetsLikedContext.Provider>
         </LoginContext.Provider>
       </PetsContext.Provider>
     </div>

@@ -1,24 +1,31 @@
 import React from "react";
-import { CardContent, Card, Container } from "semantic-ui-react";
-
+import { Container, Button, Icon, Header } from "semantic-ui-react";
 export default function HomePage() {
-  const description = [
-    "pet adoption platform serves as an online space where users can register, explore, and ultimately adopt pets.",
-    "Upon signing up, users gain access to a search functionality that enables them to browse through a variety of available pets.",
-    "The primary objective of the platform is to facilitate the adoption process,",
-    "connecting potential pet owners with animals in need of a loving home. This user-friendly environment aims to streamline the adoption experience",
-    " making it convenient and accessible for those looking to welcome a new furry companion into their lives.",
-  ].join(" ");
-
   return (
-    <Container>
-      <div>
-        <Card size="huge" style={{ marginTop: 20 }}>
-          <CardContent header="Need to find your pet a new home?" />
-          <CardContent description={description} />
-          <CardContent extra></CardContent>
-        </Card>
-      </div>
+    <Container fluid>
+      <Header className="header" as="h1" textAlign="center">
+        Welcome to Our Pet Adoption Platform! 🐾
+      </Header>
+
+      <p className="text">
+        Discover your future furry friend among the adorable pets waiting for a
+        loving home. Sign up today to explore a variety of pets, making the
+        adoption process easy and enjoyable. Our user-friendly environment is
+        designed to connect you with the perfect companion for a lifetime of
+        joy. Explore our platform to find loving homes for adorable pets or
+        consider fostering to provide temporary care for those in need.
+      </p>
+
+      <Button className="button" color="orange" animated="vertical">
+        <Button.Content visible>Get Started</Button.Content>
+        <Button.Content hidden>
+          <Icon name="arrow right" />
+        </Button.Content>
+      </Button>
+
+      <span className="login-text">
+        Already have an account? Log in <span className="highlight">here</span>.
+      </span>
     </Container>
   );
 }

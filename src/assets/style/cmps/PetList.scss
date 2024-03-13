@@ -1,5 +1,14 @@
 .pet-list {
+    display: flex;
+    align-items: center;
     list-style: none;
-    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    height: 100%;
+    width: 100%;
+    list-style: none;
+  }
+  
 
-}
+  
