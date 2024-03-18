@@ -11,6 +11,8 @@ export default function LoginModal({ setIsOpenLoginModal, isOpenLoginModal }) {
 
   const login = async () => {
     const authenticatedUser = await petService.login(email, password);
+    console.log("line 48", authenticatedUser);
+
     setLoggedInUser(authenticatedUser);
     setIsOpenLoginModal(false);
     // localStorage.saveTokenAndUserToStorage(token, user.id);

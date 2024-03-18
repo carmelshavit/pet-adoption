@@ -1,29 +1,41 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Icon } from "semantic-ui-react";
-import PetsLikedContext from "../context/PetsLikedContext";
 import { petService } from "../service/pet.service";
 import LoginContext from "../context/LoginContext";
 
 export default function PetPreview({ pet }) {
-  const { likedPetIds, setLikedPetIds } = useContext(PetsLikedContext);
   const [isLike, setIsLike] = useState(false);
-  const { loggedInUser } = useContext(LoginContext);
-
+  const { loggedInUser, setLoggedInUser } = useContext(LoginContext);
   const { id, name, imgFile } = pet;
-
   const navigate = useNavigate();
 
-  const toggleLike = async (petId) => {
-    const userId = loggedInUser.id;
-    if (likedPetIds.includes(petId)) {
-      setLikedPetIds((prev) => prev.filter((id) => id !== petId));
-      setIsLike(false);
-      await petService.removePetLike(userId, id);
-    } else {
-      setLikedPetIds((prev) => [...prev, petId]);
+  useEffect(() => {
+    if (loggedInUser.likedPetIds.includes(id)) {
       setIsLike(true);
-      await petService.addPetLike(userId, id);
+    }
+  }, [loggedInUser.likedPetIds, id]);
+
+  const toggleLike = async (petId) => {
+    const { id, likedPetIds } = loggedInUser;
+
+    if (likedPetIds.includes(petId)) {
+      const updatedLikedPetIds = likedPetIds.filter(
+        (likedPetId) => likedPetId !== petId
+      );
+      setLoggedInUser((prevUser) => ({
+        ...prevUser,
+        likedPetIds: updatedLikedPetIds,
+      }));
+      setIsLike(false);
+      await petService.removePetLike(id, petId);
+    } else {
+      setLoggedInUser((prevUser) => ({
+        ...prevUser,
+        likedPetIds: [...prevUser.likedPetIds, petId],
+      }));
+      setIsLike(true);
+      await petService.addPetLike(id, petId);
     }
   };
 
@@ -33,7 +45,6 @@ export default function PetPreview({ pet }) {
     await toggleLike(id);
   };
 
-  //     //TODO- make sure state changes once the like is removed/added successfully
   return (
     <div className="pet-preview" onClick={() => navigate(`/pet/${id}`)}>
       <div className="icon-container">

@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import PetPreview from "./PetPreview";
 import LoginContext from "../context/LoginContext";
 
-export default function PetList({ pets, openEditModal }) {
+export default function PetList({ pets, openEditModal, handleAdoptClick }) {
   const { loggedInUser } = useContext(LoginContext);
 
   const isAdmin = loggedInUser?.is_admin == true;
@@ -21,6 +21,11 @@ export default function PetList({ pets, openEditModal }) {
             {isAdmin && (
               <button onClick={(e) => handlePetClick(pet.id, e)}>Edit</button>
             )}
+            <button
+              onClick={(e) => handleAdoptClick(pet.id, loggedInUser.id, e)}
+            >
+              Adopt
+            </button>
           </li>
         ))}
       </ul>

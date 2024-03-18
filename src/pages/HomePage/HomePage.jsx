@@ -2,8 +2,8 @@ import React from "react";
 import { Container, Button, Icon, Header } from "semantic-ui-react";
 export default function HomePage() {
   return (
-    <Container fluid>
-      <Header className="header" as="h1" textAlign="center">
+    <Container className="full-screen-container" fluid>
+      <Header className="header" as="h1">
         Welcome to Our Pet Adoption Platform! 🐾
       </Header>
 
@@ -16,7 +16,7 @@ export default function HomePage() {
         consider fostering to provide temporary care for those in need.
       </p>
 
-      <Button className="button" color="orange" animated="vertical">
+      <Button className="button">
         <Button.Content visible>Get Started</Button.Content>
         <Button.Content hidden>
           <Icon name="arrow right" />

@@ -29,6 +29,7 @@ export default function MainHeader() {
 
   const logout = () => {
     setLoggedInUser(false);
+    // TODO = setLikedPetIds([])
     // navigate("/");
     localStorage.removeItem("userId");
   };
@@ -44,8 +45,8 @@ export default function MainHeader() {
       return alert("passwords not identical");
     await petService.editUser(updatedUserDetails);
     const user = await petService.getUserById(userId);
+    console.log("line 48", user);
     setLoggedInUser(user);
-    console.log("line 55", user);
     setEditUserDetails(user);
     setIsOpenSignupModal(false);
   };

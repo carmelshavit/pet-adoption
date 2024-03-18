@@ -54,29 +54,29 @@ async function login(email, password) {
   }
 }
 
-async function getPets() {
+async function getPets(likedPetIds) {
+  console.log(likedPetIds);
   try {
-    const response = await fetch("http://localhost:3001/pet", {
-      method: "GET", // Assuming you are retrieving user data, so using GET method
+    const response = await fetch("http://localhost:3001/pet/like", {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
+      body: JSON.stringify(likedPetIds),
     });
-
-    // console.log("line 94: Response status:", response.status);
 
     if (!response.ok) {
       throw new Error(`Failed to get pet. Status: ${response.status}`);
     }
 
-    const petData = await response.json(); // Renamed variable to avoid conflict
-    // console.log("line 101: User data:", petData);
-    return petData;
+    const petData = await response.json(); // Parsing response data as JSON
+    return petData; // Returning the pet data
   } catch (error) {
     console.error("Error getting pet:", error);
     throw error;
   }
 }
+
 async function addPet(pet) {
   try {
     console.log("add pet", pet);
@@ -104,31 +104,39 @@ async function addPet(pet) {
     throw error;
   }
 }
+
+async function addAdoptedPet(petId, userId) {
+  console.log("add adopted", petId);
+  console.log("add adopted", userId);
+  try {
+    const token = localStorageService.loadTokenFromStorage();
+
+    const response = await fetch(`http://localhost:3001/pet/${petId}/adopt`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: "Bearer " + token,
+      },
+      body: JSON.stringify({ userId }),
+    });
+
+    console.log("line 91: Response status:", response.status);
+
+    if (!response.ok) {
+      throw new Error(`Failed to adopted pet. Status: ${response.status}`);
+    }
+    const adoptedPet = await response.json();
+    // console.log("line 77: New pet added:", newPet);
+    return adoptedPet;
+  } catch (error) {
+    console.error("Error adding pet:", error);
+    throw error;
+  }
+}
 // TODO- make combination between pet_status and user table with join. to get likesPet.
 
 //TODO- implement getPetLikes from pet_status table
 
-// async function getPetLikes() {
-//   try {
-//     const response = await fetch(`http://localhost:3001/pet/${petId}/save`, {
-//       method: "GET", // Assuming you are retrieving user data, so using GET method
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//     });
-
-//     console.log("line 118: Response status:", response.status);
-
-//     if (!response.ok) {
-//       throw new Error(`Failed to save like. Status: ${response.status}`);
-//     }
-//     const newLike = await response.json();
-//     return newLike;
-//   } catch (error) {
-//     console.error("Error adding like:", error);
-//     throw error;
-//   }
-// }
 async function addPetLike(userId, petId) {
   try {
     const response = await fetch(`http://localhost:3001/pet/${petId}/save`, {
@@ -153,8 +161,6 @@ async function addPetLike(userId, petId) {
   }
 }
 async function removePetLike(userId, petId) {
-  console.log(userId);
-  console.log(petId);
   try {
     const response = await fetch(
       `http://localhost:3001/pet/${petId}/save?userId=${userId}`,
@@ -206,8 +212,6 @@ async function getPetById(id) {
 }
 async function editPet(editedPet) {
   try {
-    console.log(editedPet);
-
     const response = await fetch(`http://localhost:3001/pet/${editedPet.id}`, {
       method: "PUT",
       headers: {
@@ -261,30 +265,62 @@ async function getPetsBySearch(filters) {
     throw error;
   }
 }
-
-async function getUserById(userId) {
+async function getUsersBySearch(filters) {
+  console.log(filters);
   try {
-    const response = await fetch(`http://localhost:3001/user/${userId}`, {
-      method: "GET", // Assuming you are retrieving user data, so using GET method
+    // Convert filters object to query parameters
+    //    TODO:FILTER ALL THE FIELDS WITH VALUE== NULL
+    const filteredFilters = {};
+    Object.keys(filters).forEach((key) => {
+      if (filters[key] !== null) {
+        filteredFilters[key] = filters[key];
+      }
+    });
+
+    const queryParams = new URLSearchParams(filteredFilters).toString();
+    const response = await fetch(`http://localhost:3001/user?${queryParams}`, {
+      method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
     });
 
-    console.log("line 94: Response status:", response.status);
+    // console.log("line 112: Response status:", response.status);
 
     if (!response.ok) {
-      throw new Error(`Failed to get user. Status: ${response.status}`);
+      throw new Error(`Failed to get users. Status: ${response.status}`);
     }
-
-    const userData = await response.json(); // Renamed variable to avoid conflict
-    console.log("line 101: User data:", userData);
-    return userData;
+    const petsData = await response.json();
+    return petsData;
   } catch (error) {
-    console.error("Error getting user:", error);
+    console.error("Error getting pets:", error);
     throw error;
   }
 }
+
+// async function getUserById(userId) {
+//   try {
+//     const response = await fetch(`http://localhost:3001/user/${userId}`, {
+//       method: "GET", // Assuming you are retrieving user data, so using GET method
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//     });
+
+//     console.log("line 94: Response status:", response.status);
+
+//     if (!response.ok) {
+//       throw new Error(`Failed to get user. Status: ${response.status}`);
+//     }
+
+//     const userData = await response.json(); // Renamed variable to avoid conflict
+//     console.log("line 101: User data:", userData);
+//     return userData;
+//   } catch (error) {
+//     console.error("Error getting user:", error);
+//     throw error;
+//   }
+// }
 async function getCurrentLoggedInUser() {
   try {
     const token = localStorageService.loadTokenFromStorage();
@@ -343,7 +379,7 @@ export const petService = {
   makeId,
   signUp,
   addPet,
-  getUserById,
+  // getUserById,
   editUser,
   getCurrentLoggedInUser,
   saveTokenAndUserToStorage,
@@ -351,7 +387,8 @@ export const petService = {
   getPetById,
   editPet,
   getPetsBySearch,
+  getUsersBySearch,
   addPetLike,
   removePetLike,
-  // getPetLikes,
+  addAdoptedPet,
 };

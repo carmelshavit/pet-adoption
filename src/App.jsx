@@ -12,6 +12,7 @@ import { localStorageService } from "./service/localStorage";
 import "./assets/style/main.scss";
 import PetsContext from "./context/PetsContext";
 import PetsLikedContext from "./context/PetsLikedContext";
+import MyPets from "./pages/PetPage/MyPets";
 
 function App() {
   const [loggedInUser, setLoggedInUser] = useState(null);
@@ -21,11 +22,9 @@ function App() {
   useEffect(() => {
     const loadUser = async () => {
       const userId = localStorageService.loadUserFromStorage();
-      // console.log(userId);
       if (userId) {
         const user = await petService.getCurrentLoggedInUser();
         // console.log(user);
-        // TODO- setlikedPetIds to petService.getPetLikes
         setLoggedInUser(user);
       }
     };
@@ -45,6 +44,7 @@ function App() {
                 <Route path="/users" element={<AdminPage />} />
                 <Route path="/profile" element={<ProfilePage />} />
                 <Route path="/pet/:id" element={<PetPage />} />
+                <Route path="/MyPets" element={<MyPets />} />
               </Routes>
             </BrowserRouter>
           </PetsLikedContext.Provider>
