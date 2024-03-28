@@ -1,26 +1,41 @@
 .pet-preview {
-  text-align: center;
-  padding: 10px;
-  position: relative;
+
+  display: flex !important;
+  justify-content: space-between !important;
+  flex-direction: column;
 
 
-.pet-img {
-  border-radius: 8px;
-  margin-bottom: 8px;
-  width: 120px;
-  height: 140px; /* Fix the typo here */
-  object-fit: cover; /* Adjust as needed, e.g., cover, contain, etc. */
 
-}
-.name {
-  font-size: 16px;
-  color: black;
-}
+  .pet-img {
 
-.like {
-  all: unset;
-  position: absolute;
-  top: 15px;
-  right: 15px;
-}
+    height: 25vw !important;
+    object-fit: cover;
+    margin: 0 !important;
+    padding: 0 !important;
+    margin-bottom: 10px !important;
+
+
+
+
+  }
+
+  .pet-details {
+    display: flex !important;
+    justify-content: space-between !important;
+    flex-direction: column !important;
+  }
+
+
+  .name {
+    font-size: 16px;
+    color: black;
+    margin: 0;
+  }
+
+  .like {
+    all: unset;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+  }
 }

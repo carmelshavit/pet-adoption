@@ -1,14 +1,29 @@
 .pet-list {
-    display: flex;
-    align-items: center;
-    list-style: none;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    height: 100%;
-    width: 100%;
-    list-style: none;
-  }
-  
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  list-style: none;
+  padding: 0;
 
-  
+
+  li {
+    height: 30vw !important;
+    width: 200px !important;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  }
+
+  .pet-container {
+    flex-direction: column;
+    display: flex;
+    justify-content: space-between;
+
+    .pet-buttons {
+      display: flex !important;
+      justify-content: center !important;
+    }
+  }
+
+  .adopted-status {
+    margin: 0;
+  }
+}

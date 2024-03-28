@@ -1,12 +1,8 @@
 import React from "react";
-import { Modal, Header, Loader, Button } from "semantic-ui-react";
+import { Modal, Header } from "semantic-ui-react";
+import PetList from "./PetList";
 
-export default function UserDetails({
-  user,
-  setIsOpenUserModal,
-  isOpenUserModal,
-}) {
-  //   const openUserModal = () => setIsOpenUserModal(true);
+const UserDetails = ({ user, setIsOpenUserModal, isOpenUserModal }) => {
   const closeUserModal = () => setIsOpenUserModal(false);
 
   return (
@@ -17,25 +13,22 @@ export default function UserDetails({
         size="small"
         closeIcon
       >
-        <Header>{user ? user["first_name"] : "User Details"}</Header>
+        <Header>
+          {user ? `${user["first_name"]} ${user["last_name"]}` : "User Details"}{" "}
+        </Header>
         <Modal.Content>
-          {user ? (
+          {user && (
             <>
-              <p>Type: {user["last_name"]}</p>
-              <p>Adoption Status: {user.adoption_status}</p>
-              <p>Height: {user.height}</p>
-              <p>Weight: {user.weight}</p>
-              <p>Color: {user.color}</p>
-              <p>Bio: {user.bio}</p>
-              <p>Hypoallergenic: {user.hypoallergenic ? "Yes" : "No"}</p>
-              <p>Dietary Restrictions: {user.dietary_restrictions}</p>
-              <p>Breed: {user.breed}</p>
+              <p>Email: {user["email"]}</p>
+              <p>Phone Number: {user["phone_number"]}</p>
             </>
-          ) : (
-            <Loader active />
           )}
+          <p className="adopted-status">Adopted Pets:</p>
+          <PetList pets={user && user.adoptedPets} />
         </Modal.Content>
       </Modal>
     </div>
   );
-}
+};
+
+export default UserDetails;

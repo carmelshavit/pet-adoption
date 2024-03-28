@@ -1,6 +1,11 @@
 @import './cmps/PetList.scss';
 @import './cmps/PetPreview.scss';
 @import './cmps/HomePage.scss';
+@import './cmps/MainHeader.scss';
+@import './cmps/SearchUserForm.scss';
+@import './cmps/SearchForm.scss';
+@import './cmps/ProfilePage.scss';
+@import './cmps/SearchPage.scss';
 
 
 body{
@@ -8,3 +13,5 @@ background-color: #DDF3F0 !important;
 // background-image: url('./cmps/cat2.jpg') !important;
 
 }
+
+

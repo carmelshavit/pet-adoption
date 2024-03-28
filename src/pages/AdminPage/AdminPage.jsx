@@ -7,7 +7,6 @@ import { petService } from "../../service/pet.service";
 
 export default function AdminPage() {
   const [users, setUsers] = useState([]);
-  const [selectedUser, setSelectedUser] = useState(null); // State to track selected user
   const { loggedInUser } = useContext(LoginContext);
   const [filterBy, setFilterBy] = useState({
     email: "",
@@ -36,8 +35,11 @@ export default function AdminPage() {
     <>
       {loggedInUser?.is_admin && (
         <div>
-          <SearchUserForm filterBy={filterBy} updateFilter={updateFilter} />
-          <button onClick={searchUser}>Search</button>
+          <SearchUserForm
+            filterBy={filterBy}
+            updateFilter={updateFilter}
+            searchUser={searchUser}
+          />
           <UserList users={users} />
         </div>
       )}

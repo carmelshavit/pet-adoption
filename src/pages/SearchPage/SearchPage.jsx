@@ -7,6 +7,7 @@ import {
   CardDescription,
   Container,
   Form,
+  Button,
 } from "semantic-ui-react";
 import { petService } from "../../service/pet.service";
 import PetList from "../../cmps/PetList";
@@ -17,20 +18,21 @@ import EditAddPet from "../AdminPage/EditAddPet";
 const PET_CARDS = [
   { petType: "dog", petImgSrc: "dog", cardDescription: "Dogs" },
   { petType: "cat", petImgSrc: "cat", cardDescription: "Cats" },
-  {
-    petType: "otherAnimal",
-    petImgSrc: "otherAnimal",
-    cardDescription: "Other Animal",
-  },
-  {
-    petType: "sheltersRescues",
-    petImgSrc: "sheltersRescues",
-    cardDescription: "Shelters Rescues",
-  },
+  // {
+  //   petType: "otherAnimal",
+  //   petImgSrc: "otherAnimal",
+  //   cardDescription: "Other Animal",
+  // },
+  // {
+  //   petType: "sheltersRescues",
+  //   petImgSrc: "sheltersRescues",
+  //   cardDescription: "Shelters Rescues",
+  // },
 ];
 
 const SearchPage = () => {
   const [pets, setPets] = useState([]);
+  const [adoptedPets, setAdoptedPets] = useState([]);
   const [selectedPet, setSelectedPet] = useState(null);
   const [isShowEditModal, setIsShowEditModal] = useState(false);
   const [isShowAddModal, setIsShowAddModal] = useState(false);
@@ -89,15 +91,44 @@ const SearchPage = () => {
   };
   const isAdmin = loggedInUser?.is_admin == true;
   //replace card component. add array to render the cards.
+
+  const returnPet = async (petId) => {
+    try {
+      const returnedPet = await petService.returnPet(petId);
+      setAdoptedPets(adoptedPets.filter((pet) => pet._id !== petId));
+      console.log("Pet returned:", returnedPet);
+    } catch (error) {
+      console.error("Error returning pet:", error);
+    }
+  };
+
+  const adoptPet = async (petId) => {
+    try {
+      const adoptedPet = await petService.adoptPet(petId);
+      setAdoptedPets([...adoptedPets, adoptedPet]);
+      console.log("Pet adopted:", adoptedPet);
+    } catch (error) {
+      console.error("Error adopting pet:", error);
+    }
+  };
+
+  const handleAdoption = async (petId, e) => {
+    e.stopPropagation();
+    if (adoptedPets.some((pet) => pet.id === petId)) {
+      await returnPet(petId);
+    } else {
+      await adoptPet(petId);
+    }
+  };
   return (
     <Container>
       {!isPets && (
         <div>
-          <CardGroup itemsPerRow={4}>
+          <CardGroup itemsPerRow={2}>
             {PET_CARDS.map((card, index) => (
-              // <li key={index}>
               <Card
-                style={{ marginTop: 40 }}
+                key={index}
+                style={{ marginTop: 40, width: "200px" }} // Adjust the width to make the card smaller
                 onClick={() => {
                   updateFilter("type", card.petType);
                   setIsPets(true);
@@ -106,13 +137,12 @@ const SearchPage = () => {
                 <img
                   src={ImagesSrc[card.petImgSrc]}
                   alt={card.petImgSrc}
-                  style={{ height: "200px", objectFit: "cover" }}
+                  style={{ objectFit: "cover", width: "90%", padding: "10px" }} // Adjust the width and height to make the image smaller
                 />
                 <CardContent>
                   <CardDescription>{card.cardDescription}</CardDescription>
                 </CardContent>
               </Card>
-              // </li>
             ))}
           </CardGroup>
         </div>
@@ -121,12 +151,28 @@ const SearchPage = () => {
       {isPets && (
         <>
           <SearchForm filterBy={filterBy} updateFilter={updateFilter} />
-          <button onClick={() => searchPet(filterBy)}>Search</button>
-          {isAdmin && <button onClick={openAddModal}>Add</button>}
+          <Button
+            onClick={() => searchPet(filterBy)}
+            basic
+            color="purple"
+            content="Purple"
+          >
+            Search{" "}
+          </Button>
+          {isAdmin && (
+            <Button
+              onClick={openAddModal}
+              basic
+              color="purple"
+              content="Purple"
+            >
+              Add
+            </Button>
+          )}
           <PetList
             openEditModal={openEditModal}
             pets={pets}
-            // toggleLike={toggleLike}
+            handleAdoption={handleAdoption}
           />
         </>
       )}
@@ -136,7 +182,7 @@ const SearchPage = () => {
           setIsOpenEditModal={setIsShowAddModal}
         />
       )}
-      TODO:solve to update the setPet/selectedpet after addpet or editpet.ד
+      {/* TODO:solve to update the setPet/selectedpet after addpet or editpet.ד */}
       {isShowEditModal && (
         <EditAddPet
           isOpenEditModal={isShowEditModal}

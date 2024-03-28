@@ -7,7 +7,7 @@ import LoginContext from "../context/LoginContext";
 export default function PetPreview({ pet }) {
   const [isLike, setIsLike] = useState(false);
   const { loggedInUser, setLoggedInUser } = useContext(LoginContext);
-  const { id, name, imgFile } = pet;
+  const { id, name, imgFile, adoptedBy } = pet; // Destructure the adoptedBy property
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -47,16 +47,21 @@ export default function PetPreview({ pet }) {
 
   return (
     <div className="pet-preview" onClick={() => navigate(`/pet/${id}`)}>
-      <div className="icon-container">
-        <button className="like" onClick={handleLikeToggle}>
-          <Icon
-            name={isLike ? "heart" : "heart outline"}
-            color={isLike ? "red" : "black"}
-          />
-        </button>
+      {adoptedBy ? null : (
+        <div className="icon-container">
+          <button className="like" onClick={handleLikeToggle}>
+            <Icon
+              name={isLike ? "heart" : "heart outline"}
+              color={isLike ? "red" : "black"}
+            />
+          </button>
+        </div>
+      )}
+      <div className="pet-details">
+        <img className="pet-img" src={imgFile} alt={name} />
+        
+          <h5 className="name">{name}</h5>
+        </div>
       </div>
-      <img className="pet-img" src={imgFile} alt={name} />
-      <h5 className="name">{name}</h5>
-    </div>
   );
 }

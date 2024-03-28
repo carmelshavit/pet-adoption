@@ -13,7 +13,6 @@ import UserFormModal from "./UserFormModal";
 import LoginModal from "./LoginModal";
 import LoginContext from "../context/LoginContext";
 import { petService } from "../service/pet.service";
-import { localStorageService } from "../service/localStorage";
 //TODO- side bar that keep logout and edit user.
 
 export default function MainHeader() {
@@ -34,23 +33,6 @@ export default function MainHeader() {
     localStorage.removeItem("userId");
   };
 
-  const editUser = async (userDetails) => {
-    const userId = localStorageService.loadUserFromStorage();
-
-    const updatedUserDetails = {
-      ...userDetails,
-      userId: userId,
-    };
-    if (userDetails.password !== userDetails.confirmPassword)
-      return alert("passwords not identical");
-    await petService.editUser(updatedUserDetails);
-    const user = await petService.getUserById(userId);
-    console.log("line 48", user);
-    setLoggedInUser(user);
-    setEditUserDetails(user);
-    setIsOpenSignupModal(false);
-  };
-
   const signup = async (userDetails) => {
     if (userDetails.password !== userDetails.confirmPassword)
       return alert("passwords not identical");
@@ -62,7 +44,7 @@ export default function MainHeader() {
   };
 
   return (
-    <div>
+    <div className="menu-header">
       <Menu pointing secondary size="large">
         {loggedInUser?.is_admin == true && (
           <MenuItem
@@ -104,22 +86,20 @@ export default function MainHeader() {
         <MenuMenu position="right">
           {loggedInUser && (
             <div>
-              <Button onClick={() => setIsOpenSignupModal(true)}>
-                Hello, {loggedInUser.first_name} {loggedInUser.last_name}
-              </Button>
+              Hello, {loggedInUser.first_name} {loggedInUser.last_name}
               <Button color="red" onClick={logout}>
                 Logout
               </Button>
             </div>
           )}
-          {isOpenSignupModal && (
+          {/* {isOpenSignupModal && (
             <UserFormModal
               onFormSubmit={editUser}
               isOpenSignupModal={isOpenSignupModal}
               setIsOpenSignupModal={setIsOpenSignupModal}
               editUserDetails={editUserDetails} // Pass the details for editing
             />
-          )}
+          )} */}
 
           {!loggedInUser && (
             <div>

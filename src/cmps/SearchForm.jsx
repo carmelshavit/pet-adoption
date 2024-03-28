@@ -28,23 +28,13 @@ export default function SearchForm({ filterBy, updateFilter }) {
     }
   };
 
-  // const options = [
-  //   { key: "dog", text: "dog", value: "dog" },
-  //   { key: "cat", text: "cat", value: "cat" },
-  //   { key: "fish", text: "fish", value: "fish" },
-  //   { key: "horse", text: "horse", value: "horse" },
-  // ];
-  // const handleChangeSelect = (e, { value }) => {
-  //   const selectedOption = options.find((o) => o.key === value);
-  //   updateFilter(type, selectedOption.text );
-  // };
-
   return (
     <div>
-      <Container>
-        <Form>
-          <Segment>
-            <Form.Group widths="equal">
+      {/* <Container> */}
+      <Form>
+        <Segment>
+          <Form.Group>
+            <div>
               <Form.Input
                 label="Breed of Animal"
                 placeholder="Breed of Animal"
@@ -59,8 +49,10 @@ export default function SearchForm({ filterBy, updateFilter }) {
                 value={filterBy.type}
                 onChange={handleChange}
               />
-            </Form.Group>
-            <Form.Group widths="equal">
+            </div>
+          </Form.Group>
+          <Form.Group>
+            <div style={{ display: "flex", flexDirection: "column" }}>
               {filterBy.minHeight > filterBy.maxHeight && (
                 <div>'minValue is greater than maxValue'</div>
               )}
@@ -74,7 +66,6 @@ export default function SearchForm({ filterBy, updateFilter }) {
                 name="minHeight"
                 type="number"
               />
-
               <Form.Input
                 placeholder="Max Height"
                 value={filterBy.maxHeight}
@@ -85,6 +76,8 @@ export default function SearchForm({ filterBy, updateFilter }) {
                 name="maxHeight"
                 type="number"
               />
+            </div>
+            <div style={{ display: "flex", flexDirection: "column" }}>
               <Form.Input
                 placeholder="Min Weight"
                 value={filterBy.minWeight}
@@ -105,53 +98,54 @@ export default function SearchForm({ filterBy, updateFilter }) {
                 name="maxWeight"
                 type="number"
               />
-            </Form.Group>
+            </div>
+          </Form.Group>
 
-            <Form.Group>
-              <Form.Input
-                label="Color"
-                placeholder="Color"
-                value={filterBy.color}
-                onChange={handleChange}
-                name="color"
-              />
-            </Form.Group>
-            <Form.Group inline>
-              <label>Hypoallergenic</label>
-              <Form.Radio
-                label="No"
-                value="No"
-                checked={!filterBy.hypoallergenic}
-                onChange={handleChange}
-                name="no"
-              />
-              <Form.Radio
-                label="Yes"
-                value="Yes"
-                checked={filterBy.hypoallergenic}
-                onChange={handleChange}
-                name="yes"
-              />
-            </Form.Group>
-            <Form.Group widths="equal">
-              <Form.Input
-                label="Dietary Restrictions"
-                placeholder="Dietary Restrictions"
-                value={filterBy.dietary_restrictions}
-                onChange={handleChange}
-                name="dietary_restrictions"
-              />
-              <Form.Input
-                label="Name"
-                placeholder="Name"
-                value={filterBy.name}
-                onChange={handleChange}
-                name="name"
-              />
-            </Form.Group>
-          </Segment>
-        </Form>
-      </Container>
+          <Form.Group>
+            <Form.Input
+              label="Color"
+              placeholder="Color"
+              value={filterBy.color}
+              onChange={handleChange}
+              name="color"
+            />
+          </Form.Group>
+          <Form.Group inline>
+            <label>Hypoallergenic</label>
+            <Form.Radio
+              label="No"
+              value="No"
+              checked={!filterBy.hypoallergenic}
+              onChange={handleChange}
+              name="no"
+            />
+            <Form.Radio
+              label="Yes"
+              value="Yes"
+              checked={filterBy.hypoallergenic}
+              onChange={handleChange}
+              name="yes"
+            />
+          </Form.Group>
+          <Form.Group widths="equal">
+            <Form.Input
+              label="Dietary Restrictions"
+              placeholder="Dietary Restrictions"
+              value={filterBy.dietary_restrictions}
+              onChange={handleChange}
+              name="dietary_restrictions"
+            />
+            <Form.Input
+              label="Name"
+              placeholder="Name"
+              value={filterBy.name}
+              onChange={handleChange}
+              name="name"
+            />
+          </Form.Group>
+        </Segment>
+      </Form>
+      {/* </Container> */}
     </div>
   );
 }

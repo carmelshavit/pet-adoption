@@ -24,7 +24,7 @@ function App() {
       const userId = localStorageService.loadUserFromStorage();
       if (userId) {
         const user = await petService.getCurrentLoggedInUser();
-        // console.log(user);
+        console.log(user);
         setLoggedInUser(user);
       }
     };

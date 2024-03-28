@@ -18,8 +18,7 @@ export default function UserFormModal({
   isOpenSignupModal,
   onFormSubmit,
 }) {
-  const { setLoggedInUser } = useContext(LoginContext);
-
+  const { loggedInUser, setLoggedInUser } = useContext(LoginContext);
   const [userDetails, setUserDetails] = useState({
     first_name: "",
     last_name: "",
@@ -103,6 +102,9 @@ export default function UserFormModal({
                 content: "Please enter a valid email address",
                 pointing: "below",
               }}
+            />
+            <FormField
+           
             />
           </Form>
         </ModalContent>

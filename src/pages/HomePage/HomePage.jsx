@@ -16,16 +16,16 @@ export default function HomePage() {
         consider fostering to provide temporary care for those in need.
       </p>
 
-      <Button className="button">
+      {/* <Button className="button">
         <Button.Content visible>Get Started</Button.Content>
         <Button.Content hidden>
           <Icon name="arrow right" />
         </Button.Content>
-      </Button>
-
+      </Button> */}
+      {/* 
       <span className="login-text">
         Already have an account? Log in <span className="highlight">here</span>.
-      </span>
+      </span> */}
     </Container>
   );
 }

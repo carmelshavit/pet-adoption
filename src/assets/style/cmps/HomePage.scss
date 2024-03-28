@@ -2,46 +2,61 @@ body {
   text-align: center;
   margin: 0;
   padding: 0;
-  // background-image: url('../../Images/cat2.jpg') !important;
-  background-size: cover;
+  
+
 }
 
 .full-screen-container {
+  background-image: url("/src/assets/style/cmps/istockphoto-992637094-1024x1024.jpg") !important;
+  background-repeat: no-repeat
+ !important;
+ background-size: cover!important;
+ background-attachment: fixed !important;
 
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+
+  width: 100vw;
   height: 100vh;
-  background-image: url('./cat2.jpg') !important;
-
+  display: flex !important;
+  
+  flex-direction: column !important;
+  align-items: center !important;
+  text-align: center !important;
+  
 }
 
-.header {
-  margin: 40px 0;
+h1.ui.header {
   color: #009688;
-  text-shadow: 2px 2px 4px #000000;
+  text-shadow: 2px 2px 4px white;
+  margin-top: 20px !important;
+  font-size: 40px !important;
 }
 
 .text {
   text-align: center;
   font-size: 1.2em;
-  margin: 20px ;
-  color: #555;
+  margin: 50px !important;
+  color:purple;
+  font-size: 20px;
 }
 
 .button {
   margin: 20px auto;
   display: block;
-  color: orange;
+  color: purple;
 }
 
-.login-text {
-  text-align: center;
-  display: block;
-  color: #555;
-}
+// .login-text {
+//   text-align: center;
+//   display: block;
+//   color: black;
+// }
 
-.highlight {
-  color: #009688;
-}
+// .highlight {
+//   color: #009688;
+// }
+
+
+// .button-container {
+//   margin-top: 200px !important; /* Pushes the button to the bottom */
+//   align-self: flex-end !important; /* Aligns the button to the right */
+// }

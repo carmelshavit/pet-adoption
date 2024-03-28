@@ -45,7 +45,7 @@ async function login(email, password) {
     const user = responseJson.user;
     console.log(user);
     const token = responseJson.token;
-    Cookies.set("token", token);
+    Cookies.set("access_token", token, { expire: new Date() + 9999 });
     saveTokenAndUserToStorage(token, user.id);
     return user;
   } catch (error) {
@@ -55,7 +55,6 @@ async function login(email, password) {
 }
 
 async function getPets(likedPetIds) {
-  console.log(likedPetIds);
   try {
     const response = await fetch("http://localhost:3001/pet/like", {
       method: "POST",
@@ -105,9 +104,8 @@ async function addPet(pet) {
   }
 }
 
-async function addAdoptedPet(petId, userId) {
+async function adoptPet(petId) {
   console.log("add adopted", petId);
-  console.log("add adopted", userId);
   try {
     const token = localStorageService.loadTokenFromStorage();
 
@@ -117,7 +115,6 @@ async function addAdoptedPet(petId, userId) {
         "Content-Type": "application/json",
         authorization: "Bearer " + token,
       },
-      body: JSON.stringify({ userId }),
     });
 
     console.log("line 91: Response status:", response.status);
@@ -126,10 +123,37 @@ async function addAdoptedPet(petId, userId) {
       throw new Error(`Failed to adopted pet. Status: ${response.status}`);
     }
     const adoptedPet = await response.json();
-    // console.log("line 77: New pet added:", newPet);
+    console.log("line 129:adoptedPet added:", adoptedPet);
     return adoptedPet;
   } catch (error) {
     console.error("Error adding pet:", error);
+    throw error;
+  }
+}
+
+async function returnPet(petId) {
+  console.log("return adopted", petId);
+  try {
+    const token = localStorageService.loadTokenFromStorage();
+
+    const response = await fetch(`http://localhost:3001/pet/${petId}/return`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: "Bearer " + token,
+      },
+    });
+
+    console.log("line 91: Response status:", response.status);
+
+    if (!response.ok) {
+      throw new Error(`Failed to return pet. Status: ${response.status}`);
+    }
+    const returnPet = await response.json();
+    console.log("line 77: New pet return:", returnPet);
+    return returnPet;
+  } catch (error) {
+    console.error("Error returning pet:", error);
     throw error;
   }
 }
@@ -268,6 +292,7 @@ async function getPetsBySearch(filters) {
 async function getUsersBySearch(filters) {
   console.log(filters);
   try {
+    const token = localStorageService.loadTokenFromStorage();
     // Convert filters object to query parameters
     //    TODO:FILTER ALL THE FIELDS WITH VALUE== NULL
     const filteredFilters = {};
@@ -282,6 +307,7 @@ async function getUsersBySearch(filters) {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        authorization: "Bearer " + token,
       },
     });
 
@@ -291,6 +317,7 @@ async function getUsersBySearch(filters) {
       throw new Error(`Failed to get users. Status: ${response.status}`);
     }
     const petsData = await response.json();
+    console.log(petsData);
     return petsData;
   } catch (error) {
     console.error("Error getting pets:", error);
@@ -298,29 +325,29 @@ async function getUsersBySearch(filters) {
   }
 }
 
-// async function getUserById(userId) {
-//   try {
-//     const response = await fetch(`http://localhost:3001/user/${userId}`, {
-//       method: "GET", // Assuming you are retrieving user data, so using GET method
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//     });
+async function getUserById(userId) {
+  try {
+    const response = await fetch(`http://localhost:3001/user/${userId}`, {
+      method: "GET", // Assuming you are retrieving user data, so using GET method
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
-//     console.log("line 94: Response status:", response.status);
+    console.log("line 94: Response status:", response.status);
 
-//     if (!response.ok) {
-//       throw new Error(`Failed to get user. Status: ${response.status}`);
-//     }
+    if (!response.ok) {
+      throw new Error(`Failed to get user. Status: ${response.status}`);
+    }
 
-//     const userData = await response.json(); // Renamed variable to avoid conflict
-//     console.log("line 101: User data:", userData);
-//     return userData;
-//   } catch (error) {
-//     console.error("Error getting user:", error);
-//     throw error;
-//   }
-// }
+    const userData = await response.json(); // Renamed variable to avoid conflict
+    console.log("line 101: User data:", userData);
+    return userData;
+  } catch (error) {
+    console.error("Error getting user:", error);
+    throw error;
+  }
+}
 async function getCurrentLoggedInUser() {
   try {
     const token = localStorageService.loadTokenFromStorage();
@@ -345,6 +372,7 @@ async function getCurrentLoggedInUser() {
   }
 }
 async function editUser(editedUser) {
+  console.log(editedUser.id);
   try {
     console.log("line 235", editedUser);
     const response = await fetch(
@@ -379,7 +407,7 @@ export const petService = {
   makeId,
   signUp,
   addPet,
-  // getUserById,
+  getUserById,
   editUser,
   getCurrentLoggedInUser,
   saveTokenAndUserToStorage,
@@ -390,5 +418,6 @@ export const petService = {
   getUsersBySearch,
   addPetLike,
   removePetLike,
-  addAdoptedPet,
+  adoptPet,
+  returnPet,
 };

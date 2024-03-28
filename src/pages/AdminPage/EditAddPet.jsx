@@ -29,12 +29,9 @@ export default function EditAddPet({
         }
   );
 
-
   const options = [
     { key: "dog", text: "dog", value: "dog" },
     { key: "cat", text: "cat", value: "cat" },
-    { key: "fish", text: "fish", value: "fish" },
-    { key: "horse", text: "horse", value: "horse" },
   ];
 
   const handleChange = (e) => {
@@ -135,6 +132,7 @@ export default function EditAddPet({
                   onChange={handleChangeNumber}
                   name="height"
                   type="number"
+                  step="0.1"
                 />
                 <Form.Input
                   label="Weight"
@@ -143,6 +141,7 @@ export default function EditAddPet({
                   onChange={handleChangeNumber}
                   name="weight"
                   type="number"
+                  step="0.1"
                 />
                 <Form.Input
                   label="Color"
@@ -195,7 +194,13 @@ export default function EditAddPet({
                 />
               </Form.Group>
 
-              <Button type="submit" onClick={handleSubmit}>
+              <Button
+                type="submit"
+                onClick={handleSubmit}
+                basic
+                color="red"
+                content="Red"
+              >
                 {selectedPet ? "Save" : "Add"}
               </Button>
             </Segment>
