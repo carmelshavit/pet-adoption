@@ -1,10 +1,6 @@
 import Cookies from "js-cookie";
 import { localStorageService } from "./localStorage";
 
-function makeId() {
-  return Math.random().toString(36).substring(2, 10);
-}
-
 async function signUp(user) {
   try {
     const response = await fetch("http://localhost:3001/user/signup", {
@@ -404,7 +400,6 @@ function saveTokenAndUserToStorage(token, userId) {
 
 export const petService = {
   login,
-  makeId,
   signUp,
   addPet,
   getUserById,

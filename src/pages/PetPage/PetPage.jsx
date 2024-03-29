@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { petService } from "../../service/pet.service";
 import { useParams } from "react-router-dom";
+import {
+  Card,
+  Image,
+  CardContent,
+  CardHeader,
+  CardMeta,
+  CardDescription,
+  Icon,
+} from "semantic-ui-react";
 
 export default function PetPage() {
   const [pet, setPet] = useState(null);
@@ -17,26 +26,38 @@ export default function PetPage() {
         console.error("Error fetching pet:", error);
       }
     };
-
     getPetById();
   }, []);
 
   return (
-    <div>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+      }}
+    >
       {pet ? (
-        <>
-          <h2>{pet.name}</h2>
-          <img src={pet.imgFile} alt={pet.name} />
-          <p>Type: {pet.type}</p>
-          <p>Adoption Status: {pet.adoption_status}</p>
-          <p>Height: {pet.height}</p>
-          <p>Weight: {pet.weight}</p>
-          <p>Color: {pet.color}</p>
-          <p>Bio: {pet.bio}</p>
-          <p>Hypoallergenic: {pet.hypoallergenic ? "Yes" : "No"}</p>
-          <p>Dietary Restrictions: {pet.dietary_restrictions}</p>
-          <p>Breed: {pet.breed}</p>
-        </>
+        <Card>
+          <Image src={pet.imgFile} wrapped ui={false} />
+          <CardContent>
+            <CardHeader>{pet.name}</CardHeader>
+            <CardMeta>Type: {pet.type}</CardMeta>
+            <CardMeta>Adoption Status: {pet.adoption_status}</CardMeta>
+            <CardMeta>Height: {pet.height}</CardMeta>
+            <CardMeta>Weight: {pet.weight}</CardMeta>
+            <CardMeta>Color: {pet.color}</CardMeta>
+            <CardMeta>Bio: {pet.bio}</CardMeta>
+            <CardMeta>
+              Hypoallergenic: {pet.hypoallergenic ? "Yes" : "No"}
+            </CardMeta>
+            <CardMeta>
+              Dietary Restrictions: {pet.dietary_restrictions}
+            </CardMeta>
+            <CardMeta>Breed: {pet.breed}</CardMeta>
+          </CardContent>
+        </Card>
       ) : (
         <p>Loading pet details...</p>
       )}

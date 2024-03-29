@@ -76,13 +76,16 @@ export default function MainHeader() {
           active={activeItem === "profile"}
           onClick={handleItemClick}
         />
-        <MenuItem
-          as={Link}
-          to="/MyPets"
-          name="MyPets"
-          active={activeItem === "MyPets"}
-          onClick={handleItemClick}
-        />
+        {loggedInUser && (
+          <MenuItem
+            as={Link}
+            to="/MyPets"
+            name="MyPets"
+            active={activeItem === "MyPets"}
+            onClick={handleItemClick} // Update active item
+          />
+        )}
+
         <MenuMenu position="right">
           {loggedInUser && (
             <div>

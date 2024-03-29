@@ -6,10 +6,15 @@
     box-shadow: none !important;
     border-radius: 0 !important;
     border: none !important;
-  
-.ui.compact.primary.button.button{
-    margin-top: 25px;
-}
 
-  }
-  
+    .ui.violet.basic.button.button {
+        margin-top: 12px !important;
+        margin-inline-start: 15px !important;
+    }
+
+    .form-container {
+        display: flex;
+        align-items: center;
+    }
+
+}

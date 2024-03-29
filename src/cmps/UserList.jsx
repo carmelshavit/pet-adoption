@@ -25,6 +25,7 @@ const UserList = ({ users }) => {
         <Table compact celled definition>
           <TableHeader>
             <TableRow>
+              {/* <TableHeaderCell>*</TableHeaderCell> */}
               <TableHeaderCell>First Name</TableHeaderCell>
               <TableHeaderCell>Last Name</TableHeaderCell>
               <TableHeaderCell>E-mail address</TableHeaderCell>

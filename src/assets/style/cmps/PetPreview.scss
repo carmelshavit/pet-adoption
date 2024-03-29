@@ -1,5 +1,5 @@
 .pet-preview {
-
+position: relative !important;
   display: flex !important;
   justify-content: space-between !important;
   flex-direction: column;
@@ -16,8 +16,7 @@
 
 
 
-
-  }
+}
 
   .pet-details {
     display: flex !important;

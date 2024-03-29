@@ -36,7 +36,7 @@ const SearchPage = () => {
   const [selectedPet, setSelectedPet] = useState(null);
   const [isShowEditModal, setIsShowEditModal] = useState(false);
   const [isShowAddModal, setIsShowAddModal] = useState(false);
-  const { loggedInUser } = useContext(LoginContext);
+  const { loggedInUser, setLoggedInUser } = useContext(LoginContext);
 
   const [filterBy, setFilterBy] = useState({
     type: "",
@@ -55,6 +55,10 @@ const SearchPage = () => {
   useEffect(() => {
     searchPet(filterBy);
   }, [isPets]);
+
+  useEffect(() => {
+    console.log(loggedInUser);
+  }, [loggedInUser]);
 
   const updateFilter = (name, value) => {
     console.log(name, value);
@@ -93,9 +97,18 @@ const SearchPage = () => {
   //replace card component. add array to render the cards.
 
   const returnPet = async (petId) => {
+    console.log(petId);
     try {
       const returnedPet = await petService.returnPet(petId);
-      setAdoptedPets(adoptedPets.filter((pet) => pet._id !== petId));
+
+      const updatedAdoptedPets = loggedInUser.adoptedPets.filter(
+        (pet) => pet.id !== petId
+      );
+      setLoggedInUser((prevUser) => ({
+        ...prevUser,
+        adoptedPets: updatedAdoptedPets,
+      }));
+      setAdoptedPets(updatedAdoptedPets);
       console.log("Pet returned:", returnedPet);
     } catch (error) {
       console.error("Error returning pet:", error);
@@ -105,8 +118,15 @@ const SearchPage = () => {
   const adoptPet = async (petId) => {
     try {
       const adoptedPet = await petService.adoptPet(petId);
-      setAdoptedPets([...adoptedPets, adoptedPet]);
-      console.log("Pet adopted:", adoptedPet);
+      // Ensure that the adoptedPet object matches the structure of other pets
+      const updatedAdoptedPets = [...loggedInUser.adoptedPets, adoptedPet];
+      // Update the loggedInUser state using the updated value provided in the function argument
+      setLoggedInUser((prevUser) => ({
+        ...prevUser,
+        adoptedPets: updatedAdoptedPets,
+      }));
+      console.log("Pet adopted:", updatedAdoptedPets);
+      setAdoptedPets(updatedAdoptedPets);
     } catch (error) {
       console.error("Error adopting pet:", error);
     }
@@ -114,12 +134,17 @@ const SearchPage = () => {
 
   const handleAdoption = async (petId, e) => {
     e.stopPropagation();
-    if (adoptedPets.some((pet) => pet.id === petId)) {
+    const isAdopted = loggedInUser.adoptedPets.some((pet) => pet.id === petId);
+
+    if (isAdopted) {
       await returnPet(petId);
+      console.log("returning pet");
     } else {
       await adoptPet(petId);
+      console.log("adopting pet");
     }
   };
+
   return (
     <Container>
       {!isPets && (

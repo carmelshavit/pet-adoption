@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { petService } from "../../service/pet.service";
 import LoginContext from "../../context/LoginContext";
 import PetList from "../../cmps/PetList";
+import { Button } from "semantic-ui-react";
 
 export default function MyPets() {
   const [likedPets, setLikedPets] = useState([]);
@@ -23,7 +24,6 @@ export default function MyPets() {
         console.error("Error fetching liked pets:", error);
       }
     };
-
     fetchLikedPets();
   }, []);
 
@@ -34,13 +34,10 @@ export default function MyPets() {
   return (
     <div>
       <h2>{displayingAdopted ? "My Pets" : "Saved Pets"}</h2>
-      <button onClick={toggleDisplay}>
+      <Button onClick={toggleDisplay} basic color="violet">
         {displayingAdopted ? "Show Liked Pets" : "Show Adopted Pets"}
-      </button>
-      <PetList
-        pets={displayingAdopted ? adoptedPets : likedPets}
-        // handleAdoption={handleAdoption}
-      />
+      </Button>
+      <PetList pets={displayingAdopted ? adoptedPets : likedPets} />
     </div>
   );
 }
