@@ -11,23 +11,13 @@ import {
 } from "semantic-ui-react";
 import { petService } from "../../service/pet.service";
 import PetList from "../../cmps/PetList";
-import SearchForm from "../../cmps/SearchForm";
+import SearchForm from "./SearchForm";
 import LoginContext from "../../context/LoginContext";
 import EditAddPet from "../AdminPage/EditAddPet";
 
 const PET_CARDS = [
   { petType: "dog", petImgSrc: "dog", cardDescription: "Dogs" },
   { petType: "cat", petImgSrc: "cat", cardDescription: "Cats" },
-  // {
-  //   petType: "otherAnimal",
-  //   petImgSrc: "otherAnimal",
-  //   cardDescription: "Other Animal",
-  // },
-  // {
-  //   petType: "sheltersRescues",
-  //   petImgSrc: "sheltersRescues",
-  //   cardDescription: "Shelters Rescues",
-  // },
 ];
 
 const SearchPage = () => {
@@ -55,10 +45,6 @@ const SearchPage = () => {
   useEffect(() => {
     searchPet(filterBy);
   }, [isPets]);
-
-  useEffect(() => {
-    console.log(loggedInUser);
-  }, [loggedInUser]);
 
   const updateFilter = (name, value) => {
     console.log(name, value);
@@ -118,9 +104,7 @@ const SearchPage = () => {
   const adoptPet = async (petId) => {
     try {
       const adoptedPet = await petService.adoptPet(petId);
-      // Ensure that the adoptedPet object matches the structure of other pets
       const updatedAdoptedPets = [...loggedInUser.adoptedPets, adoptedPet];
-      // Update the loggedInUser state using the updated value provided in the function argument
       setLoggedInUser((prevUser) => ({
         ...prevUser,
         adoptedPets: updatedAdoptedPets,

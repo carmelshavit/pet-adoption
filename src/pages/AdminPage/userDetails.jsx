@@ -1,6 +1,6 @@
 import React from "react";
 import { Modal, Header } from "semantic-ui-react";
-import PetList from "./PetList";
+import PetList from "../../cmps/PetList";
 
 const UserDetails = ({ user, setIsOpenUserModal, isOpenUserModal }) => {
   const closeUserModal = () => setIsOpenUserModal(false);

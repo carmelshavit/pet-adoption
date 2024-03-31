@@ -3,6 +3,7 @@ import { petService } from "../../service/pet.service";
 import LoginContext from "../../context/LoginContext";
 import PetList from "../../cmps/PetList";
 import { Button } from "semantic-ui-react";
+import PetDetails from "./petDetails";
 
 export default function MyPets() {
   const [likedPets, setLikedPets] = useState([]);

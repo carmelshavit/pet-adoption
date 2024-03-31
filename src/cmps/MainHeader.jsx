@@ -9,7 +9,7 @@ import {
   ButtonGroup,
   ButtonOr,
 } from "semantic-ui-react";
-import UserFormModal from "./UserFormModal";
+import UserFormModal from "../pages/AdminPage/UserFormModal";
 import LoginModal from "./LoginModal";
 import LoginContext from "../context/LoginContext";
 import { petService } from "../service/pet.service";
@@ -46,7 +46,7 @@ export default function MainHeader() {
   return (
     <div className="menu-header">
       <Menu pointing secondary size="large">
-        {loggedInUser?.is_admin == true && (
+        {loggedInUser && loggedInUser.is_admin === true && (
           <MenuItem
             as={Link}
             to="/users"
@@ -89,20 +89,12 @@ export default function MainHeader() {
         <MenuMenu position="right">
           {loggedInUser && (
             <div>
-              Hello, {loggedInUser.first_name} {loggedInUser.last_name}
-              <Button color="red" onClick={logout}>
+              Hello, {loggedInUser.first_name} {loggedInUser.last_name}{" "}
+              <Button color="red" size="small" onClick={logout}>
                 Logout
               </Button>
             </div>
           )}
-          {/* {isOpenSignupModal && (
-            <UserFormModal
-              onFormSubmit={editUser}
-              isOpenSignupModal={isOpenSignupModal}
-              setIsOpenSignupModal={setIsOpenSignupModal}
-              editUserDetails={editUserDetails} // Pass the details for editing
-            />
-          )} */}
 
           {!loggedInUser && (
             <div>

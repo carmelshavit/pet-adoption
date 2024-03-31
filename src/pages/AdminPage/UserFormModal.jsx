@@ -9,16 +9,13 @@ import {
   Form,
   Input,
 } from "semantic-ui-react";
-import React, { useContext, useState } from "react";
-import { petService } from "../service/pet.service";
-import LoginContext from "../context/LoginContext";
+import React, { useState } from "react";
 
 export default function UserFormModal({
   setIsOpenSignupModal,
   isOpenSignupModal,
   onFormSubmit,
 }) {
-  const { loggedInUser, setLoggedInUser } = useContext(LoginContext);
   const [userDetails, setUserDetails] = useState({
     first_name: "",
     last_name: "",
@@ -103,9 +100,7 @@ export default function UserFormModal({
                 pointing: "below",
               }}
             />
-            <FormField
-           
-            />
+            <FormField />
           </Form>
         </ModalContent>
         <ModalActions>

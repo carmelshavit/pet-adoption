@@ -8,7 +8,7 @@ import {
   Table,
   Container,
 } from "semantic-ui-react";
-import UserDetails from "./userDetails";
+import UserDetails from "../pages/AdminPage/userDetails";
 
 const UserList = ({ users }) => {
   const [selectedUser, setSelectedUser] = useState(null);
@@ -22,7 +22,7 @@ const UserList = ({ users }) => {
   return (
     <div>
       <Container>
-        <Table compact celled definition>
+        <Table compact celled>
           <TableHeader>
             <TableRow>
               {/* <TableHeaderCell>*</TableHeaderCell> */}
