@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Segment, Container, Modal, Button, Form } from "semantic-ui-react";
 import { petService } from "../../service/pet.service";
 import uploadImg from "../../service/cloudinary.utils";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function EditAddPet({
   isOpenEditModal,
@@ -9,8 +11,6 @@ export default function EditAddPet({
   selectedPet,
 }) {
   const [selectedFile, setSelectedFile] = useState(null);
-  // selectedPet is null => ADD mode.
-  // selectedPet is not null => EDIT mode.
   const [pet, setPet] = useState(
     selectedPet
       ? selectedPet
@@ -38,6 +38,7 @@ export default function EditAddPet({
     const { name, value } = e.target;
     setPet((prevPet) => ({ ...prevPet, [name]: value }));
   };
+
   const handleChangeNumber = (e) => {
     const { name, value } = e.target;
     setPet((prevPet) => ({ ...prevPet, [name]: parseFloat(value) }));
@@ -55,12 +56,28 @@ export default function EditAddPet({
   const handleSubmit = async () => {
     try {
       if (selectedPet) {
-        await petService.editPet(pet);
+        let editedPet;
+        if (selectedFile) {
+          const { url } = await uploadImg(selectedFile);
+          editedPet = {
+            ...pet,
+            imgFile: url,
+          };
+        } else {
+          editedPet = pet;
+        }
+        await petService.editPet(editedPet);
       } else {
         await addPet();
       }
+      toast.success("Pet edited successfully");
+      setIsOpenEditModal(false);
     } catch (error) {
+      toast.error("Failed to edit pet");
       console.error(error);
+    } finally {
+      // Stop loader
+      // make sure SearchPage will refresh pets
     }
   };
 
@@ -73,7 +90,9 @@ export default function EditAddPet({
           imgFile: url,
         };
         await petService.addPet(petWithImgUrl);
+        toast.success("Pet added successfully");
       } catch (error) {
+        toast.error("Failed to add pet");
         console.error("Error handling file upload:", error);
       }
     }

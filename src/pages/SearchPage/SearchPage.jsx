@@ -22,7 +22,6 @@ const PET_CARDS = [
 
 const SearchPage = () => {
   const [pets, setPets] = useState([]);
-  const [adoptedPets, setAdoptedPets] = useState([]);
   const [selectedPet, setSelectedPet] = useState(null);
   const [isShowEditModal, setIsShowEditModal] = useState(false);
   const [isShowAddModal, setIsShowAddModal] = useState(false);
@@ -35,16 +34,17 @@ const SearchPage = () => {
     minWeight: null,
     maxWeight: null,
     color: "",
-    hypoallergenic: "", // TODO: can either be "" or "true"
-    dietary_restrictions: "",
+    hypoallergenic: false, // TODO: can either be "" or "true"
     breed: "",
-    name: "",
+    pageNum: 1,
+    perPage: 3,
   });
   const [isPets, setIsPets] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     searchPet(filterBy);
-  }, [isPets]);
+  }, [isPets, currentPage]);
 
   const updateFilter = (name, value) => {
     console.log(name, value);
@@ -55,19 +55,27 @@ const SearchPage = () => {
   };
 
   const searchPet = async (filterBy) => {
+    console.log({ filterBy });
     try {
       const petBySearch = await petService.getPetsBySearch(filterBy);
-      // console.log("petBySearch", petBySearch);
       setPets(petBySearch);
     } catch (error) {
       console.error(error);
     }
   };
 
-  // const showMenu = () => {
-  //   setPets([]);
-  //   setIsPets(false);
-  // };
+  const nextPage = () => {
+    console.log("nextPage");
+    setCurrentPage((prevPage) => prevPage + 1);
+    updateFilter("pageNum", currentPage + 1); // Update pageNum after incrementing currentPage
+  };
+
+  const prevPage = () => {
+    console.log("prevPage");
+
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+    updateFilter("pageNum", Math.max(currentPage - 1, 1)); // Update pageNum after decrementing currentPage
+  };
 
   const openEditModal = (petId) => {
     const pet = pets.find((pet) => pet.id === petId);
@@ -81,53 +89,6 @@ const SearchPage = () => {
   };
   const isAdmin = loggedInUser?.is_admin == true;
   //replace card component. add array to render the cards.
-
-  const returnPet = async (petId) => {
-    console.log(petId);
-    try {
-      const returnedPet = await petService.returnPet(petId);
-
-      const updatedAdoptedPets = loggedInUser.adoptedPets.filter(
-        (pet) => pet.id !== petId
-      );
-      setLoggedInUser((prevUser) => ({
-        ...prevUser,
-        adoptedPets: updatedAdoptedPets,
-      }));
-      setAdoptedPets(updatedAdoptedPets);
-      console.log("Pet returned:", returnedPet);
-    } catch (error) {
-      console.error("Error returning pet:", error);
-    }
-  };
-
-  const adoptPet = async (petId) => {
-    try {
-      const adoptedPet = await petService.adoptPet(petId);
-      const updatedAdoptedPets = [...loggedInUser.adoptedPets, adoptedPet];
-      setLoggedInUser((prevUser) => ({
-        ...prevUser,
-        adoptedPets: updatedAdoptedPets,
-      }));
-      console.log("Pet adopted:", updatedAdoptedPets);
-      setAdoptedPets(updatedAdoptedPets);
-    } catch (error) {
-      console.error("Error adopting pet:", error);
-    }
-  };
-
-  const handleAdoption = async (petId, e) => {
-    e.stopPropagation();
-    const isAdopted = loggedInUser.adoptedPets.some((pet) => pet.id === petId);
-
-    if (isAdopted) {
-      await returnPet(petId);
-      console.log("returning pet");
-    } else {
-      await adoptPet(petId);
-      console.log("adopting pet");
-    }
-  };
 
   return (
     <Container>
@@ -156,7 +117,6 @@ const SearchPage = () => {
           </CardGroup>
         </div>
       )}
-      {/* <Button onClick={showMenu}>back to menu</Button> */}
       {isPets && (
         <>
           <SearchForm filterBy={filterBy} updateFilter={updateFilter} />
@@ -178,11 +138,11 @@ const SearchPage = () => {
               Add
             </Button>
           )}
-          <PetList
-            openEditModal={openEditModal}
-            pets={pets}
-            handleAdoption={handleAdoption}
-          />
+          <PetList openEditModal={openEditModal} pets={pets} />
+          <Button onClick={prevPage} disabled={currentPage === 1}>
+            Previous
+          </Button>
+          <Button onClick={nextPage}>Next</Button>
         </>
       )}
       {isShowAddModal && (

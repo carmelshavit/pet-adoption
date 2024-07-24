@@ -1,5 +1,4 @@
-// PetList.js
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { useLocation } from "react-router-dom";
 import PetPreview from "./PetPreview";
 import LoginContext from "../context/LoginContext";
@@ -7,13 +6,12 @@ import { Button } from "semantic-ui-react";
 import PetDetails from "../pages/PetPage/petDetails";
 import { petService } from "../service/pet.service";
 
-export default function PetList({ pets, openEditModal, handleAdoption }) {
-  const { loggedInUser } = useContext(LoginContext);
-  const isAdmin = loggedInUser?.is_admin === 1;
+export default function PetList({ pets, openEditModal }) {
+  const { loggedInUser, setLoggedInUser } = useContext(LoginContext);
+  const isAdmin = loggedInUser && loggedInUser.is_admin;
   const location = useLocation();
   const [pet, setPet] = useState(null);
-  const [modalOpen, setModalOpen] = useState(false); // State for modal visibility
-
+  const [modalOpen, setModalOpen] = useState(false);
   const handleEdit = (petId, e) => {
     e.stopPropagation();
     openEditModal(petId);
@@ -22,6 +20,51 @@ export default function PetList({ pets, openEditModal, handleAdoption }) {
   const handlePetClick = (pet) => {
     setPet(pet);
     setModalOpen(true);
+  };
+
+  const returnPet = async (petId) => {
+    console.log(petId);
+    try {
+      const returnedPet = await petService.returnPet(petId);
+
+      const updatedAdoptedPets = loggedInUser.adoptedPets.filter(
+        (pet) => pet.id !== petId
+      );
+      setLoggedInUser((prevUser) => ({
+        ...prevUser,
+        adoptedPets: updatedAdoptedPets,
+      }));
+      console.log("Pet returned:", returnedPet);
+    } catch (error) {
+      console.error("Error returning pet:", error);
+    }
+  };
+
+  const adoptPet = async (petId) => {
+    try {
+      const adoptedPet = await petService.adoptPet(petId);
+      const updatedAdoptedPets = [...loggedInUser.adoptedPets, adoptedPet];
+      setLoggedInUser((prevUser) => ({
+        ...prevUser,
+        adoptedPets: updatedAdoptedPets,
+      }));
+      console.log("Pet adopted:", updatedAdoptedPets);
+    } catch (error) {
+      console.error("Error adopting pet:", error);
+    }
+  };
+
+  const handleAdoption = async (petId, e) => {
+    e.stopPropagation();
+    const isAdopted = loggedInUser.adoptedPets.some((pet) => pet.id === petId);
+    console.log("isAdopted", isAdopted);
+    if (isAdopted) {
+      await returnPet(petId);
+      console.log("returning pet");
+    } else {
+      await adoptPet(petId);
+      console.log("adopting pet");
+    }
   };
 
   const isSearchPage = location.pathname === "/search";
@@ -46,34 +89,28 @@ export default function PetList({ pets, openEditModal, handleAdoption }) {
                   Edit
                 </Button>
               )}
-              {pet.adoptedBy
-                ? isSearchPage && (
-                    <Button
-                      basic
-                      color="violet"
-                      onClick={(e) => handleAdoption(pet.id, e)}
-                    >
-                      Return
-                    </Button>
-                  )
-                : isSearchPage && (
-                    <Button
-                      basic
-                      color="violet"
-                      onClick={(e) => handleAdoption(pet.id, e)}
-                    >
-                      {loggedInUser.adoptedPets.some(
-                        (adoptedPet) => adoptedPet.id === pet.id
-                      )
-                        ? "Return"
-                        : "Adopt"}
-                    </Button>
-                  )}
+
+              <Button
+                basic
+                color="violet"
+                onClick={(e) => handleAdoption(pet.id, e)}
+              >
+                {loggedInUser.adoptedPets.some(
+                  (adoptedPet) => adoptedPet.id === pet.id
+                )
+                  ? "Return"
+                  : "Adopt"}
+              </Button>
             </div>
           </li>
         ))}
       </ul>
-      <PetDetails pet={pet} modalOpen={modalOpen} setModalOpen={setModalOpen} />
+      <PetDetails
+        handleAdoption={handleAdoption}
+        pet={pet}
+        modalOpen={modalOpen}
+        setModalOpen={setModalOpen}
+      />
     </div>
   );
 }

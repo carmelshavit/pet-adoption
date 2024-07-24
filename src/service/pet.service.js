@@ -163,7 +163,7 @@ async function addPetLike(userId, petId) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        // authorization: "Bearer " + token,
+        authorization: "Bearer " + token,
       },
       body: JSON.stringify({ userId, petId }),
     });
@@ -188,7 +188,7 @@ async function removePetLike(userId, petId) {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          // authorization: "Bearer " + token,
+          authorization: "Bearer " + token,
         },
       }
     );
@@ -232,10 +232,13 @@ async function getPetById(id) {
 }
 async function editPet(editedPet) {
   try {
+    const token = localStorageService.loadTokenFromStorage();
+
     const response = await fetch(`http://localhost:3001/pet/${editedPet.id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        authorization: "Bearer " + token,
       },
       body: JSON.stringify(editedPet),
     });
@@ -370,6 +373,7 @@ async function getCurrentLoggedInUser() {
 async function editUser(editedUser) {
   console.log(editedUser.id);
   try {
+    const token = localStorageService.loadTokenFromStorage();
     console.log("line 235", editedUser);
     const response = await fetch(
       `http://localhost:3001/user/${editedUser.id}`,
@@ -377,6 +381,7 @@ async function editUser(editedUser) {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          authorization: "Bearer " + token,
         },
         body: JSON.stringify(editedUser),
       }

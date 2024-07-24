@@ -9,11 +9,12 @@ import {
   ButtonGroup,
   ButtonOr,
 } from "semantic-ui-react";
+import { toast, ToastContainer } from "react-toastify"; // Import toast and ToastContainer from react-toastify
+import "react-toastify/dist/ReactToastify.css";
 import UserFormModal from "../pages/AdminPage/UserFormModal";
 import LoginModal from "./LoginModal";
 import LoginContext from "../context/LoginContext";
 import { petService } from "../service/pet.service";
-//TODO- side bar that keep logout and edit user.
 
 export default function MainHeader() {
   const [isOpenSignupModal, setIsOpenSignupModal] = useState(false);
@@ -28,23 +29,31 @@ export default function MainHeader() {
 
   const logout = () => {
     setLoggedInUser(false);
-    // TODO = setLikedPetIds([])
-    // navigate("/");
     localStorage.removeItem("userId");
   };
 
   const signup = async (userDetails) => {
-    if (userDetails.password !== userDetails.confirmPassword)
-      return alert("passwords not identical");
+    if (userDetails.password !== userDetails.confirmPassword) {
+      toast.error("Test error message");
+      return;
+    }
+
     delete userDetails.confirmPassword;
 
-    const newUser = await petService.signUp(userDetails);
-    setLoggedInUser(newUser);
-    setIsOpenSignupModal(false);
+    try {
+      const newUser = await petService.signUp(userDetails);
+      setLoggedInUser(newUser);
+      setIsOpenSignupModal(false);
+      toast.success("Signup successful");
+    } catch (error) {
+      toast.error("Error signing up");
+    }
   };
 
   return (
     <div className="menu-header">
+      <ToastContainer />
+
       <Menu pointing secondary size="large">
         {loggedInUser && loggedInUser.is_admin === true && (
           <MenuItem
@@ -82,7 +91,7 @@ export default function MainHeader() {
             to="/MyPets"
             name="MyPets"
             active={activeItem === "MyPets"}
-            onClick={handleItemClick} // Update active item
+            onClick={handleItemClick}
           />
         )}
 
@@ -115,6 +124,7 @@ export default function MainHeader() {
                       Signup
                     </Button>
                   )}
+
                   {isOpenSignupModal && (
                     <UserFormModal
                       onFormSubmit={signup}

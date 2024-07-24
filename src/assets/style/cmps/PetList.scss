@@ -1,30 +1,33 @@
 .pet-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
+  // display: flex;
+  // flex-wrap: wrap;
+  // gap: 20px;
+  // padding: 0;
+  // margin-inline: 20px;
+  
   list-style: none;
-  padding: 0;
-  margin-inline: 20px;
-
-
+  display: grid;
+  grid-Template-Columns: repeat(3, 1fr);
+  grid-Gap: "20px";
+  justify-content:space-between !important;
   li {
-    height: 30vw !important;
-    width: 200px !important;
+    // height: 30vw !important;
+    width: 20vw !important;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
   }
 
-  .pet-container {
-    flex-direction: column;
-    display: flex;
-    justify-content: space-between;
+  // .pet-container {
+  //   flex-direction: column;
+  //   display: flex;
+  //   justify-content: space-between;
 
     .pet-buttons {
       display: flex !important;
       justify-content: center !important;
     }
-  }
+  // }
 
-  .adopted-status {
-    margin: 0;
-  }
+  // .adopted-status {
+  //   margin: 0;
+  // }
 }

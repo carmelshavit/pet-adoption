@@ -31,6 +31,10 @@ function App() {
     loadUser();
   }, []);
 
+  // add foster
+  // add adopt option to all aplication
+  // change the alret when checking the password in signup
+
   return (
     <div>
       <PetsContext.Provider value={{ pets, setPets }}>

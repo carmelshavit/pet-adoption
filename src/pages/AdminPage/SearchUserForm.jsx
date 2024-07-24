@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import { Segment, Form, Container, Button } from "semantic-ui-react";
 
-export default function SearchUserForm({ updateFilter, filterBy, searchUser }) {
+export default function SearchUserForm({ setFilterBy, filterBy, searchUser }) {
   const handleChange = (e) => {
     const { name, value } = e.target;
-    updateFilter(name, value);
+    setFilterBy((prevFilter) => ({
+      ...prevFilter,
+      [name]: value,
+    }));
   };
 
   return (

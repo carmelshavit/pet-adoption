@@ -7,6 +7,7 @@ const MIN_PET_HEIGHT = 0.1;
 const MAX_PET_HEIGHT = 5;
 
 export default function SearchForm({ filterBy, updateFilter }) {
+  //todo- replace handleChange of radio
   const handleChange = (e) => {
     const { name, value } = e.target;
     updateFilter(name, value);
@@ -26,6 +27,13 @@ export default function SearchForm({ filterBy, updateFilter }) {
     } else {
       updateFilter(fieldName, value);
     }
+  };
+
+  const handleChangeRadio = (e, { name, value }) => {
+    console.log(name, value);
+    const booleanValue = value === "yes";
+    console.log(booleanValue);
+    updateFilter(name, booleanValue);
   };
 
   return (
@@ -84,7 +92,7 @@ export default function SearchForm({ filterBy, updateFilter }) {
                   onChange={(e) =>
                     handleChangeNumber(e, MIN_PET_WEIGHT, MAX_PET_WEIGHT)
                   }
-                  step="0.1"
+                  step="0.5"
                   name="minWeight"
                   type="number"
                 />
@@ -94,7 +102,7 @@ export default function SearchForm({ filterBy, updateFilter }) {
                   onChange={(e) =>
                     handleChangeNumber(e, MIN_PET_WEIGHT, MAX_PET_WEIGHT)
                   }
-                  step="0.1"
+                  step="0.5"
                   name="maxWeight"
                   type="number"
                 />
@@ -113,34 +121,18 @@ export default function SearchForm({ filterBy, updateFilter }) {
             <Form.Group inline>
               <label>Hypoallergenic</label>
               <Form.Radio
-                label="No"
-                value="No"
+                label="no"
+                value="no"
                 checked={!filterBy.hypoallergenic}
-                onChange={handleChange}
-                name="no"
+                onChange={handleChangeRadio}
+                name="hypoallergenic"
               />
               <Form.Radio
-                label="Yes"
-                value="Yes"
+                label="yes"
+                value="yes"
                 checked={filterBy.hypoallergenic}
-                onChange={handleChange}
-                name="yes"
-              />
-            </Form.Group>
-            <Form.Group widths="equal">
-              <Form.Input
-                label="Dietary Restrictions"
-                placeholder="Dietary Restrictions"
-                value={filterBy.dietary_restrictions}
-                onChange={handleChange}
-                name="dietary_restrictions"
-              />
-              <Form.Input
-                label="Name"
-                placeholder="Name"
-                value={filterBy.name}
-                onChange={handleChange}
-                name="name"
+                onChange={handleChangeRadio}
+                name="hypoallergenic"
               />
             </Form.Group>
           </Segment>

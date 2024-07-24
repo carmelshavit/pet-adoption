@@ -2,7 +2,6 @@ import React, { useContext, useState } from "react";
 import SearchUserForm from "./SearchUserForm";
 import UserList from "../../cmps/UserList";
 import LoginContext from "../../context/LoginContext";
-import UserDetails from "../../cmps/userDetails";
 import { petService } from "../../service/pet.service";
 
 export default function AdminPage() {
@@ -14,13 +13,6 @@ export default function AdminPage() {
     first_name: "",
     last_name: "",
   });
-
-  const updateFilter = (name, value) => {
-    setFilterBy((prevFilter) => ({
-      ...prevFilter,
-      [name]: value,
-    }));
-  };
 
   const searchUser = async () => {
     try {
@@ -37,7 +29,7 @@ export default function AdminPage() {
         <div>
           <SearchUserForm
             filterBy={filterBy}
-            updateFilter={updateFilter}
+            setFilterBy={setFilterBy}
             searchUser={searchUser}
           />
           <UserList users={users} />

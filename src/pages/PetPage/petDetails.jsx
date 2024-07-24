@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { petService } from "../../service/pet.service";
-import { useParams } from "react-router-dom";
+import React, { useContext } from "react";
+
+import LoginContext from "../../context/LoginContext";
+
 import {
   Modal,
   Card,
@@ -10,7 +11,14 @@ import {
   Button,
 } from "semantic-ui-react";
 
-export default function PetDetails({ pet, modalOpen, setModalOpen }) {
+export default function PetDetails({
+  pet,
+  modalOpen,
+  setModalOpen,
+  handleAdoption,
+}) {
+  const { loggedInUser } = useContext(LoginContext);
+
   const closeModal = () => {
     setModalOpen(false);
   };
@@ -51,6 +59,17 @@ export default function PetDetails({ pet, modalOpen, setModalOpen }) {
                   </CardMeta>
                   <CardMeta>Breed: {pet.breed}</CardMeta>
                   <Button onClick={copyPetLink}>copy pet link</Button>
+                  <Button
+                    basic
+                    color="violet"
+                    onClick={(e) => handleAdoption(pet.id, e)}
+                  >
+                    {loggedInUser.adoptedPets.some(
+                      (adoptedPet) => adoptedPet.id === pet.id
+                    )
+                      ? "Return"
+                      : "Adopt"}
+                  </Button>
                 </CardContent>
               </Card>
             </Modal.Description>
